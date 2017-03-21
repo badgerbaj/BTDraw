@@ -78,20 +78,34 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Handle navigation view item clicks here
+        // This will likely be changed in the future
+        
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_brush) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_erase) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.color_red) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.color_orange) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.color_yellow) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.color_green) {
+
+        } else if (id == R.id.color_blue) {
+
+        } else if (id == R.id.color_purple) {
+
+        } else if (id == R.id.color_pink) {
+
+        } else if (id == R.id.color_white) {
+
+        } else if (id == R.id.color_grey) {
+
+        } else if (id == R.id.color_black) {
 
         }
 

@@ -3,33 +3,57 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_brush"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:title="@string/brush" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_erase"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="@string/erase" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/paint">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/color_red"
+                android:icon="@drawable/ic_menu_red"
+                android:title="Red" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/color_orange"
+                android:icon="@drawable/ic_menu_orange"
+                android:title="Orange" />
+            <item
+                android:id="@+id/color_yellow"
+                android:icon="@drawable/ic_menu_yellow"
+                android:title="Yellow" />
+            <item
+                android:id="@+id/color_green"
+                android:icon="@drawable/ic_menu_blue"
+                android:title="Green" />
+            <item
+                android:id="@+id/color_blue"
+                android:icon="@drawable/ic_menu_blue"
+                android:title="Blue" />
+            <item
+                android:id="@+id/color_purple"
+                android:icon="@drawable/ic_menu_purple"
+                android:title="Purple" />
+            <item
+                android:id="@+id/color_pink"
+                android:icon="@drawable/ic_menu_pink"
+                android:title="Pink" />
+            <item
+                android:id="@+id/color_white"
+                android:icon="@drawable/ic_menu_white"
+                android:title="White" />
+            <item
+                android:id="@+id/color_grey"
+                android:icon="@drawable/ic_menu_grey"
+                android:title="Grey" />
+            <item
+                android:id="@+id/color_black"
+                android:icon="@drawable/ic_menu_black"
+                android:title="Black" />
         </menu>
     </item>
 
