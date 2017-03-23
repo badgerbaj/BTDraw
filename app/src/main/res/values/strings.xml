@@ -13,4 +13,7 @@
     <string name="brush">Brush</string>
     <string name="erase">Erase</string>
     <string name="paint">Paint</string>
+
+    <string name="title">BT Draw</string>
+    <string name="source">https://github.com/badgerbaj/BTDraw</string>
 </resources>
