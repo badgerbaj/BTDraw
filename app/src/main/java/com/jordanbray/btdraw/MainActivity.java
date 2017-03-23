@@ -1,5 +1,6 @@
 package com.jordanbray.btdraw;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private ArtistView av;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,18 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        av = (ArtistView)findViewById(R.id.drawing);
+
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -32,6 +46,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -71,33 +86,33 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here
         // This will likely be changed in the future
-        
+
         int id = item.getItemId();
 
         if (id == R.id.nav_brush) {
             // Handle the camera action
         } else if (id == R.id.nav_erase) {
-
+            av.Erase();
         } else if (id == R.id.color_red) {
-
+            av.setPaintColor(Color.RED);
         } else if (id == R.id.color_orange) {
-
+            av.setPaintColor(0xFFFFA500);
         } else if (id == R.id.color_yellow) {
-
+            av.setPaintColor(Color.YELLOW);
         } else if (id == R.id.color_green) {
-
+            av.setPaintColor(Color.GREEN);
         } else if (id == R.id.color_blue) {
-
+            av.setPaintColor(Color.BLUE);
         } else if (id == R.id.color_purple) {
-
+            av.setPaintColor(0xFF551A8B);
         } else if (id == R.id.color_pink) {
-
+            av.setPaintColor(0xFFFF69B4);
         } else if (id == R.id.color_white) {
-
+            av.setPaintColor(Color.WHITE);
         } else if (id == R.id.color_grey) {
-
+            av.setPaintColor(Color.LTGRAY);
         } else if (id == R.id.color_black) {
-
+            av.setPaintColor(Color.BLACK);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
