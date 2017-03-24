@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity
                     av.Erase();
                 } else if (currentItem.equals(getString(R.string.object_small))) {
                     // Handle the small brush action
-                    // InvokeXML.readMenuItemsXML(getApplicationContext());
+                    InvokeXML.readMenuItemsXML(getApplicationContext());
                 } else if (currentItem.equals(getString(R.string.object_medium))) {
                     // Handle the medium brush action
                 } else if (currentItem.equals(getString(R.string.object_large))) {
