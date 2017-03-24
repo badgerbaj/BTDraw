@@ -62,11 +62,41 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
 
+                String currentItem = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).toString();
+
+                Toast.makeText(MainActivity.this, "clicked " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
+
                 int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
                 parent.setItemChecked(index, true);
 
-                Toast.makeText(MainActivity.this, "clicked " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).toString(), Toast.LENGTH_SHORT).show();
+
                 //drawer.closeDrawers();
+
+                if (currentItem.equals(getString(R.string.brush))) {
+                    // Handle the brush action
+                } else if (currentItem.equals(getString(R.string.erase))) {
+                    av.Erase();
+                } else if (currentItem.equals(getString(R.string.color_red))) {
+                    av.setPaintColor(Color.RED);
+                } else if (currentItem.equals(getString(R.string.color_orange))) {
+                    av.setPaintColor(0xFFFFA500);
+                } else if (currentItem.equals(getString(R.string.color_yellow))) {
+                    av.setPaintColor(Color.YELLOW);
+                } else if (currentItem.equals(getString(R.string.color_green))) {
+                    av.setPaintColor(Color.GREEN);
+                } else if (currentItem.equals(getString(R.string.color_blue))) {
+                    av.setPaintColor(Color.BLUE);
+                } else if (currentItem.equals(getString(R.string.color_purple))) {
+                    av.setPaintColor(0xFF551A8B);
+                } else if (currentItem.equals(getString(R.string.color_pink))) {
+                    av.setPaintColor(0xFFFF69B4);
+                } else if (currentItem.equals(getString(R.string.color_white))) {
+                    av.setPaintColor(Color.WHITE);
+                } else if (currentItem.equals(getString(R.string.color_grey))) {
+                    av.setPaintColor(Color.LTGRAY);
+                } else if (currentItem.equals(getString(R.string.color_black))) {
+                    av.setPaintColor(Color.BLACK);
+                }
 
                 return false;
             }
@@ -172,8 +202,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here
-        // This will likely be changed in the future
+        // NOTE: This method is no longer used
 
+        /*
         int id = item.getItemId();
 
         if (id == R.id.nav_brush) {
@@ -204,6 +235,7 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        */
         return true;
     }
 }
