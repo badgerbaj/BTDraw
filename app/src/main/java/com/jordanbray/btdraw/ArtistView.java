@@ -99,6 +99,12 @@ public class ArtistView extends View {
                 lowerright.x = x;
                 lowerright.y = y;
             }
+            if (mode == 3) {
+                upperleft.x = x;
+                upperleft.y = y;
+                lowerright.x = x;
+                lowerright.y = y;
+            }
 
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             if (mode == 0) {
@@ -109,6 +115,10 @@ public class ArtistView extends View {
                 lowerright.y = y;
             }
             if (mode == 2) {
+                lowerright.x = x;
+                lowerright.y = y;
+            }
+            if (mode == 3) {
                 lowerright.x = x;
                 lowerright.y = y;
             }
@@ -125,6 +135,10 @@ public class ArtistView extends View {
             if (mode == 2) {
                 RectF rec = new RectF(upperleft.x,  upperleft.y, lowerright.x, lowerright.y);
                 canvas.drawOval(rec, paint);
+                invalidate();
+            }
+            if (mode == 3) {
+                canvas.drawLine(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
                 invalidate();
             }
         }
