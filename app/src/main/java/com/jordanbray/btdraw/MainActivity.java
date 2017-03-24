@@ -76,6 +76,12 @@ public class MainActivity extends AppCompatActivity
                     // Handle the brush action
                 } else if (currentItem.equals(getString(R.string.erase))) {
                     av.Erase();
+                } else if (currentItem.equals(getString(R.string.object_small))) {
+                    // Handle the small brush action
+                } else if (currentItem.equals(getString(R.string.object_medium))) {
+                    // Handle the medium brush action
+                } else if (currentItem.equals(getString(R.string.object_large))) {
+                    // Handle the large brush action
                 } else if (currentItem.equals(getString(R.string.color_red))) {
                     av.setPaintColor(Color.RED);
                 } else if (currentItem.equals(getString(R.string.color_orange))) {
