@@ -13,7 +13,7 @@
             android:title="@string/erase" />
     </group>
 
-    <item android:title="@string/paint">
+    <item android:title="@string/color">
         <menu>
             <item
                 android:id="@+id/color_red"

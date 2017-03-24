@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setItemIconTintList(null);
+        //navigationView.setItemIconTintList(null);
 
         prepareListData();
         mMenuAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild, expandableList);
@@ -60,15 +60,21 @@ public class MainActivity extends AppCompatActivity
 
         expandableList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-                //Log.d("DEBUG", "submenu item clicked");
+            public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
+
+                int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
+                parent.setItemChecked(index, true);
+
+                Toast.makeText(MainActivity.this, "clicked " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).toString(), Toast.LENGTH_SHORT).show();
+                //drawer.closeDrawers();
+
                 return false;
             }
         });
         expandableList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                //Log.d("DEBUG", "heading clicked");
+            public boolean onGroupClick(ExpandableListView parent, View view, int groupPosition, long id) {
+                //Log.d("DEBUG", "heading clicked: " + i);
                 return false;
             }
         });
@@ -78,34 +84,56 @@ public class MainActivity extends AppCompatActivity
         listDataHeader = new ArrayList<ExpandedMenuModel>();
         listDataChild = new HashMap<ExpandedMenuModel, List<String>>();
 
-        ExpandedMenuModel item1 = new ExpandedMenuModel();
-        item1.setIconName("heading1");
-        item1.setIconImg(android.R.drawable.ic_delete);
         // Adding data header
+        ExpandedMenuModel item1 = new ExpandedMenuModel();
+        item1.setIconName(getString(R.string.tools));
+        item1.setIconImg(android.R.drawable.ic_delete);
         listDataHeader.add(item1);
 
+        // Adding child data
+        List<String> heading1 = new ArrayList<String>();
+        heading1.add(getString(R.string.brush));
+        heading1.add(getString(R.string.erase));
+
+        // Header, Child data
+        listDataChild.put(listDataHeader.get(0), heading1);
+
+        // Adding data header
         ExpandedMenuModel item2 = new ExpandedMenuModel();
-        item2.setIconName("heading2");
+        item2.setIconName(getString(R.string.object_size));
         item2.setIconImg(android.R.drawable.ic_delete);
         listDataHeader.add(item2);
 
+        // Adding child data
+        List<String> heading2 = new ArrayList<String>();
+        heading2.add(getString(R.string.object_small));
+        heading2.add(getString(R.string.object_medium));
+        heading2.add(getString(R.string.object_large));
+
+        // Header, Child data
+        listDataChild.put(listDataHeader.get(1), heading2);
+
+        // Adding data header
         ExpandedMenuModel item3 = new ExpandedMenuModel();
-        item3.setIconName("heading3");
+        item3.setIconName(getString(R.string.color));
         item3.setIconImg(android.R.drawable.ic_delete);
         listDataHeader.add(item3);
 
         // Adding child data
-        List<String> heading1 = new ArrayList<String>();
-        heading1.add("Submenu of item 1");
+        List<String> heading3 = new ArrayList<String>();
+        heading3.add(getString(R.string.color_red));
+        heading3.add(getString(R.string.color_orange));
+        heading3.add(getString(R.string.color_yellow));
+        heading3.add(getString(R.string.color_green));
+        heading3.add(getString(R.string.color_blue));
+        heading3.add(getString(R.string.color_purple));
+        heading3.add(getString(R.string.color_pink));
+        heading3.add(getString(R.string.color_white));
+        heading3.add(getString(R.string.color_grey));
+        heading3.add(getString(R.string.color_black));
 
-        List<String> heading2 = new ArrayList<String>();
-        heading2.add("Submenu of item 2");
-        heading2.add("Submenu of item 2");
-        heading2.add("Submenu of item 2");
-
-        listDataChild.put(listDataHeader.get(0), heading1);// Header, Child data
-        listDataChild.put(listDataHeader.get(1), heading2);
-
+        // Header, Child data
+        listDataChild.put(listDataHeader.get(2), heading3);
     }
 
     @Override
