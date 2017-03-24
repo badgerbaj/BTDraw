@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity
                     av.Erase();
                 } else if (currentItem.equals(getString(R.string.object_small))) {
                     // Handle the small brush action
+                    // InvokeXML.readMenuItemsXML(getApplicationContext());
                 } else if (currentItem.equals(getString(R.string.object_medium))) {
                     // Handle the medium brush action
                 } else if (currentItem.equals(getString(R.string.object_large))) {
