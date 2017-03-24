@@ -19,18 +19,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        >
-
-        <ExpandableListView
-            android:id="@+id/navigationmenu"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:menu="@menu/activity_main_drawer"
-            android:background="@android:color/white"
-            android:layout_marginTop="20dp"
-            >
-        </ExpandableListView>
-    </android.support.design.widget.NavigationView>
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
 
 
 
