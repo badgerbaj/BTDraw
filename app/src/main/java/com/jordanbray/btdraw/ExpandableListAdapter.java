@@ -22,10 +22,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private List<ExpandedMenuModel> mListDataHeader; // header titles
 
     // child data in format of header title, child title
-    private HashMap<ExpandedMenuModel, List<String>> mListDataChild;
+    private HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> mListDataChild;
     ExpandableListView expandList;
 
-    public ExpandableListAdapter(Context context, List<ExpandedMenuModel> listDataHeader, HashMap<ExpandedMenuModel, List<String>> listChildData, ExpandableListView mView) {
+    public ExpandableListAdapter(Context context, List<ExpandedMenuModel> listDataHeader, HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> listChildData, ExpandableListView mView) {
         this.mContext = context;
         this.mListDataHeader = listDataHeader;
         this.mListDataChild = listChildData;
@@ -87,16 +87,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }
         TextView lblListHeader = (TextView) convertView
                 .findViewById(R.id.submenu);
-        //ImageView headerIcon = (ImageView) convertView.findViewById(R.id.iconimage);
+        ImageView headerIcon = (ImageView) convertView.findViewById(R.id.iconimage);
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle.getIconName());
-        //headerIcon.setImageResource(headerTitle.getIconImg());
+        headerIcon.setImageResource(headerTitle.getIconImg());
         return convertView;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final String childText = (String) getChild(groupPosition, childPosition);
+        //final String childText = (String) getChild(groupPosition, childPosition);
+        ExpandedMenuModel childText = (ExpandedMenuModel) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
             LayoutInflater li = (LayoutInflater) this.mContext
@@ -106,9 +107,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.submenu);
+        ImageView itemIcon = (ImageView) convertView.findViewById(R.id.iconimage);
+        txtListChild.setText(childText.getIconName());
+        //itemIcon.setImageResource(childText.getIconImg());
 
-        txtListChild.setText(childText);
-
+        //txtListChild.setText(childText);
         return convertView;
     }
 

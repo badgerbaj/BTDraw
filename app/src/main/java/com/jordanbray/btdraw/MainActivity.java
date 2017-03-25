@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,8 @@ public class MainActivity extends AppCompatActivity
     private ExpandableListAdapter mMenuAdapter;
     private ExpandableListView expandableList;
     private List<ExpandedMenuModel> listDataHeader;
-    private HashMap<ExpandedMenuModel, List<String>> listDataChild;
+    private HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> listDataChild;
+    private MenuModel navMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +64,12 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
 
-                String currentItem = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).toString();
+                String currentItem = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconName();
 
-                Toast.makeText(MainActivity.this, "clicked " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "clicked " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconName(), Toast.LENGTH_SHORT).show();
 
                 int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
                 parent.setItemChecked(index, true);
-
 
                 //drawer.closeDrawers();
 
@@ -117,9 +118,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void prepareListData() {
-        listDataHeader = new ArrayList<ExpandedMenuModel>();
-        listDataChild = new HashMap<ExpandedMenuModel, List<String>>();
+        //listDataHeader = new ArrayList<ExpandedMenuModel>();
+        //listDataChild = new HashMap<ExpandedMenuModel, List<ExpandedMenuModel>>();
+        navMenu = InvokeXML.readMenuItemsXML(getApplicationContext());
+        listDataHeader = navMenu.getListDataHeader();
+        listDataChild = navMenu.getListDataChild();
 
+        /*
         // Adding data header
         ExpandedMenuModel item1 = new ExpandedMenuModel();
         item1.setIconName(getString(R.string.tools));
@@ -127,9 +132,14 @@ public class MainActivity extends AppCompatActivity
         listDataHeader.add(item1);
 
         // Adding child data
-        List<String> heading1 = new ArrayList<String>();
-        heading1.add(getString(R.string.brush));
-        heading1.add(getString(R.string.erase));
+        List<ExpandedMenuModel> heading1 = new ArrayList<ExpandedMenuModel>();
+        ExpandedMenuModel menuItem = new ExpandedMenuModel();
+
+        menuItem.setIconName(getString(R.string.brush));
+        heading1.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.erase));
+        heading1.add(menuItem);
 
         // Header, Child data
         listDataChild.put(listDataHeader.get(0), heading1);
@@ -141,10 +151,16 @@ public class MainActivity extends AppCompatActivity
         listDataHeader.add(item2);
 
         // Adding child data
-        List<String> heading2 = new ArrayList<String>();
-        heading2.add(getString(R.string.object_small));
-        heading2.add(getString(R.string.object_medium));
-        heading2.add(getString(R.string.object_large));
+        List<ExpandedMenuModel> heading2 = new ArrayList<ExpandedMenuModel>();
+
+        menuItem.setIconName(getString(R.string.object_small));
+        heading2.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.object_medium));
+        heading2.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.object_large));
+        heading2.add(menuItem);
 
         // Header, Child data
         listDataChild.put(listDataHeader.get(1), heading2);
@@ -156,20 +172,41 @@ public class MainActivity extends AppCompatActivity
         listDataHeader.add(item3);
 
         // Adding child data
-        List<String> heading3 = new ArrayList<String>();
-        heading3.add(getString(R.string.color_red));
-        heading3.add(getString(R.string.color_orange));
-        heading3.add(getString(R.string.color_yellow));
-        heading3.add(getString(R.string.color_green));
-        heading3.add(getString(R.string.color_blue));
-        heading3.add(getString(R.string.color_purple));
-        heading3.add(getString(R.string.color_pink));
-        heading3.add(getString(R.string.color_white));
-        heading3.add(getString(R.string.color_grey));
-        heading3.add(getString(R.string.color_black));
+        List<ExpandedMenuModel> heading3 = new ArrayList<ExpandedMenuModel>();
+
+        menuItem.setIconName(getString(R.string.color_red));
+        heading3.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.color_orange));
+        heading3.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.color_yellow));
+        heading3.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.color_green));
+        heading3.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.color_blue));
+        heading3.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.color_purple));
+        heading3.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.color_pink));
+        heading3.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.color_white));
+        heading3.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.color_grey));
+        heading3.add(menuItem);
+
+        menuItem.setIconName(getString(R.string.color_black));
+        heading3.add(menuItem);
 
         // Header, Child data
         listDataChild.put(listDataHeader.get(2), heading3);
+        */
     }
 
     @Override
