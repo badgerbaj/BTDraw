@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/menu_items">
-    <header value="@string/tools" image="@string/tools">
+    <header value="@string/tools" image="@android:drawable/ic_delete">
         <item value="@string/brush" image="@string/brush" />
         <item value="@string/erase" image="@string/erase" />
         <item value="@string/color_picker" image="@string/color_picker" />

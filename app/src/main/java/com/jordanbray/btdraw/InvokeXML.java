@@ -46,8 +46,8 @@ public class InvokeXML extends  MainActivity {
         menu,
         header,
         item,
-        name,
-        image
+        string,
+        drawable
     }
 
     public static MenuModel readMenuItemsXML(Context ctx) {
@@ -73,14 +73,14 @@ public class InvokeXML extends  MainActivity {
                             //Log.d("XML TEST", "" + xpp.getName());
                             //Log.d("XML TEST", "" +
                             //       getStringResourceByName(ctx, xpp.getAttributeValue(0)));
-                            //Log.d("XML TEST", "" +
-                            //        getStringResourceByName(ctx, xpp.getAttributeValue(1)));
+                            Log.d("XML TEST", "" +
+                                    getResourceByName(ctx, xpp.getAttributeValue(1), XML_Ele.drawable.toString()));
                             // Create new header object
                             // Adding data header
                             ExpandedMenuModel item = new ExpandedMenuModel();
                             heading = new ArrayList<ExpandedMenuModel>();
 
-                            item.setIconName(getStringResourceByName(ctx, xpp.getAttributeValue(0)));
+                            item.setIconName(getResourceByName(ctx, xpp.getAttributeValue(0), XML_Ele.string.toString()));
                             item.setIconImg(android.R.drawable.ic_delete);
                             listDataHeader.add(item);
                         }
@@ -91,7 +91,7 @@ public class InvokeXML extends  MainActivity {
                             // Adding child data
 
                             ExpandedMenuModel menuItem = new ExpandedMenuModel();
-                            menuItem.setIconName(getStringResourceByName(ctx, xpp.getAttributeValue(0)));
+                            menuItem.setIconName(getResourceByName(ctx, xpp.getAttributeValue(0), XML_Ele.string.toString()));
                             heading.add(menuItem);
                         }
                         break;
@@ -126,10 +126,9 @@ public class InvokeXML extends  MainActivity {
         return navMenu = new MenuModel(listDataHeader, listDataChild);
     }
 
-    private static String getStringResourceByName(Context ctx, String aString) {
+    private static String getResourceByName(Context ctx, String aString, String resourceType) {
         //String rPackageName = ctx.getResources().getResourcePackageName(R.string.brush);
-        int resId = ctx.getResources().getIdentifier(aString, "string", ctx.getPackageName());
+        int resId = ctx.getResources().getIdentifier(aString, resourceType, ctx.getPackageName());
         return ctx.getString(resId);
     }
-
 }

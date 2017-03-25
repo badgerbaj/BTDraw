@@ -35,7 +35,6 @@
         <string name="color_grey">Grey</string>
         <string name="color_black">Black</string>
 
-
     <string name="title">BT Draw</string>
     <string name="source">https://github.com/badgerbaj/BTDraw</string>
 </resources>
