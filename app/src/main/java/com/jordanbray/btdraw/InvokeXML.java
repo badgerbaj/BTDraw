@@ -46,40 +46,60 @@ public class InvokeXML {
     }
 
     public static void readMenuItemsXML(Context ctx) {
-
-        int foundAttributes;
-        int expectedAttributes = 2;
+        String tagname;
+        int eventtype;
 
         try {
             XmlPullParser xpp = ctx.getResources().getXml(R.xml.menu_items);
 
-            //Log.d("XML TEST", "" + xpp.getEventType());
+            eventtype = xpp.getEventType();
+            while (eventtype != XmlPullParser.END_DOCUMENT){
+                tagname = xpp.getName();
 
-            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
-                if (xpp.getEventType() == XmlPullParser.START_TAG) {
-                    if (xpp.getName().equals(XML_Ele.item.toString())) {
-                        foundAttributes = 0;
-
-                        Log.d("XML TEST", "" + xpp.getName());
-
-                        while(foundAttributes < expectedAttributes) {
-                            if(xpp.getAttributeCount() == 0) {
-                                xpp.next();
-                            } else {
-                                foundAttributes++;
-                                Log.d("XML TEST", "" + xpp.getName());
-                                Log.d("XML TEST", "" + xpp.getAttributeValue(0));
-                            }
+                switch (eventtype){
+                    case XmlPullParser.START_TAG:
+                        if(tagname.equals(XML_Ele.header.toString())){
+                            Log.d("XML TEST", "" + xpp.getName());
+                            Log.d("XML TEST", "" + xpp.getAttributeValue(0));
                         }
+                        if(tagname.equals(XML_Ele.name.toString())){
+                            Log.d("XML TEST", "" + xpp.getName());
+                            Log.d("XML TEST", "" + xpp.getAttributeValue(0));
+                        }
+                        if(tagname.equals(XML_Ele.image.toString())){
+                            Log.d("XML TEST", "" + xpp.getName());
+                            Log.d("XML TEST", "" + xpp.getAttributeValue(0));
+                        }
+                        break;
 
-                    }
+                    case  XmlPullParser.TEXT:
+                        //curText = xpp.getText();
+                        break;
+
+                    case XmlPullParser.END_TAG:
+                        if(tagname.equals(XML_Ele.header.toString())){
+                            Log.d("XML TEST", "End " + xpp.getName());
+                        }
+                        if(tagname.equals(XML_Ele.item.toString())){
+                            //Log.d("XML TEST", "" + xpp.getName());
+                        }
+                        if(tagname.equals(XML_Ele.name.toString())){
+                            //Log.d("XML TEST", "" + xpp.getName());
+                            //Log.d("XML TEST", "" + xpp.getAttributeValue(0));
+                        }
+                        if(tagname.equals(XML_Ele.image.toString())){
+                            //Log.d("XML TEST", "" + xpp.getName());
+                            //Log.d("XML TEST", "" + xpp.getAttributeValue(0));
+                        }
+                        break;
+                    default:
+                        break;
                 }
-
-                xpp.next();
+                eventtype = xpp.next();
             }
 
         } catch (Exception e) {
-            Log.d("XML ERROR", e.getMessage());
+            Log.e("XML ERROR", e.getMessage());
         }
 
     }
