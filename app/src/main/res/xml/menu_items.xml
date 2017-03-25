@@ -1,70 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/menu_items">
-    <header value="@string/tools" >
+    <header value="R.string.tools" >
         <item>
-            <name value="@string/brush" />
-            <image value="@string/brush" />
+            <name value="R.string.brush" />
+            <image value="R.string.brush" />
         </item>
         <item>
-            <name value="@string/erase" />
-            <image value="@string/erase" />
-        </item>
-    </header>
-    <header value="@string/object_size">
-        <item>
-            <name value="@string/object_small" />
-            <image value="@string/object_small" />
-        </item>
-        <item>
-            <name value="@string/object_medium" />
-            <image value="@string/object_medium" />
-        </item>
-        <item>
-            <name value="@string/object_large" />
-            <image value="@string/object_large" />
+            <name value="R.string.erase" />
+            <image value="R.string.erase" />
         </item>
     </header>
-    <header value="@string/color">
+    <header value="R.string.object_size">
         <item>
-            <name value="@string/color_red" />
-            <image value="@string/color_red" />
+            <name value="R.string.object_small" />
+            <image value="R.string.object_small" />
         </item>
         <item>
-            <name value="@string/color_orange" />
-            <image value="@string/color_orange" />
+            <name value="R.string.object_medium" />
+            <image value="R.string.object_medium" />
         </item>
         <item>
-            <name value="@string/color_yellow" />
-            <image value="@string/color_yellow" />
+            <name value="R.string.object_large" />
+            <image value="R.string.object_large" />
+        </item>
+    </header>
+    <header value="R.string.color">
+        <item>
+            <name value="R.string.color_red" />
+            <image value="R.string.color_red" />
         </item>
         <item>
-            <name value="@string/color_green" />
-            <image value="@string/color_green" />
+            <name value="R.string.color_orange" />
+            <image value="R.string.color_orange" />
         </item>
         <item>
-            <name value="@string/color_blue" />
-            <image value="@string/color_blue" />
+            <name value="R.string.color_yellow" />
+            <image value="R.string.color_yellow" />
         </item>
         <item>
-            <name value="@string/color_purple" />
-            <image value="@string/color_purple" />
+            <name value="R.string.color_green" />
+            <image value="R.string.color_green" />
         </item>
         <item>
-            <name value="@string/color_pink" />
-            <image value="@string/color_pink" />
+            <name value="R.string.color_blue" />
+            <image value="R.string.color_blue" />
         </item>
         <item>
-            <name value="@string/color_white" />
-            <image value="@string/color_white" />
+            <name value="R.string.color_purple" />
+            <image value="R.string.color_purple" />
         </item>
         <item>
-            <name value="@string/color_grey" />
-            <image value="@string/color_grey" />
+            <name value="R.string.color_pink" />
+            <image value="R.string.color_pink" />
         </item>
         <item>
-            <name value="@string/color_black" />
-            <image value="@string/color_black" />
+            <name value="R.string.color_white" />
+            <image value="R.string.color_white" />
+        </item>
+        <item>
+            <name value="R.string.color_grey" />
+            <image value="R.string.color_grey" />
+        </item>
+        <item>
+            <name value="R.string.color_black" />
+            <image value="R.string.color_black" />
         </item>
     </header>
 </menu>

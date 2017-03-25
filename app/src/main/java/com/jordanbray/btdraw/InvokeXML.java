@@ -60,7 +60,8 @@ public class InvokeXML {
                     case XmlPullParser.START_TAG:
                         if(tagname.equals(XML_Ele.header.toString())){
                             Log.d("XML TEST", "" + xpp.getName());
-                            Log.d("XML TEST", "" + xpp.getAttributeValue(0));
+                            Log.d("XML TEST", "" +
+                                    getStringResourceByName(ctx, xpp.getAttributeValue(0)));
                         }
                         if(tagname.equals(XML_Ele.name.toString())){
                             Log.d("XML TEST", "" + xpp.getName());
@@ -102,5 +103,16 @@ public class InvokeXML {
             Log.e("XML ERROR", e.getMessage());
         }
 
+    }
+
+    private static String getStringResourceByName(Context ctx, String aString) {
+        //TODO This is returning 0 for some reason
+        // http://stackoverflow.com/questions/7493287/android-how-do-i-get-string-from-resources-using-its-name
+        String packageName = ctx.getPackageName();
+        Log.d("XML TEST", "" + packageName);
+        Log.d("XML TEST", "" + aString);
+        int resId = ctx.getResources().getIdentifier(aString, "string", packageName);
+        Log.d("XML TEST", "" + resId);
+        return ctx.getString(resId);
     }
 }
