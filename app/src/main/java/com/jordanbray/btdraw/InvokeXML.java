@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,7 +37,10 @@ import static android.content.ContentValues.TAG;
  *
  */
 
-public class InvokeXML {
+public class InvokeXML extends  MainActivity {
+
+    private static List<ExpandedMenuModel> listDataHeader;
+    private static HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> listDataChild;
 
     private enum XML_Ele {
         menu,
@@ -45,31 +50,49 @@ public class InvokeXML {
         image
     }
 
-    public static void readMenuItemsXML(Context ctx) {
-        String tagname;
-        int eventtype;
+    public static MenuModel readMenuItemsXML(Context ctx) {
+        String tagName;
+        int eventType;
+        int headings = 0;
+        listDataHeader = new ArrayList<ExpandedMenuModel>();
+        listDataChild = new HashMap<ExpandedMenuModel, List<ExpandedMenuModel>>();
+        MenuModel navMenu;
+
+        List<ExpandedMenuModel> heading = new ArrayList<ExpandedMenuModel>();
 
         try {
             XmlPullParser xpp = ctx.getResources().getXml(R.xml.menu_items);
 
-            eventtype = xpp.getEventType();
-            while (eventtype != XmlPullParser.END_DOCUMENT){
-                tagname = xpp.getName();
+            eventType = xpp.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT){
+                tagName = xpp.getName();
 
-                switch (eventtype){
+                switch (eventType){
                     case XmlPullParser.START_TAG:
-                        if(tagname.equals(XML_Ele.header.toString())){
-                            Log.d("XML TEST", "" + xpp.getName());
-                            Log.d("XML TEST", "" +
-                                    getStringResourceByName(ctx, xpp.getAttributeValue(0)));
+                        if(tagName.equals(XML_Ele.header.toString())){
+                            //Log.d("XML TEST", "" + xpp.getName());
+                            //Log.d("XML TEST", "" +
+                            //       getStringResourceByName(ctx, xpp.getAttributeValue(0)));
+                            //Log.d("XML TEST", "" +
+                            //        getStringResourceByName(ctx, xpp.getAttributeValue(1)));
+                            // Create new header object
+                            // Adding data header
+                            ExpandedMenuModel item = new ExpandedMenuModel();
+                            heading = new ArrayList<ExpandedMenuModel>();
+
+                            item.setIconName(getStringResourceByName(ctx, xpp.getAttributeValue(0)));
+                            item.setIconImg(android.R.drawable.ic_delete);
+                            listDataHeader.add(item);
                         }
-                        if(tagname.equals(XML_Ele.name.toString())){
-                            Log.d("XML TEST", "" + xpp.getName());
-                            Log.d("XML TEST", "" + xpp.getAttributeValue(0));
-                        }
-                        if(tagname.equals(XML_Ele.image.toString())){
-                            Log.d("XML TEST", "" + xpp.getName());
-                            Log.d("XML TEST", "" + xpp.getAttributeValue(0));
+                        if(tagName.equals(XML_Ele.item.toString())){
+                            //Log.d("XML TEST", "" + xpp.getName());
+                            //Log.d("XML TEST", "" + xpp.getAttributeValue(0));
+                            // Create new item header object, add to header object
+                            // Adding child data
+
+                            ExpandedMenuModel menuItem = new ExpandedMenuModel();
+                            menuItem.setIconName(getStringResourceByName(ctx, xpp.getAttributeValue(0)));
+                            heading.add(menuItem);
                         }
                         break;
 
@@ -78,41 +101,35 @@ public class InvokeXML {
                         break;
 
                     case XmlPullParser.END_TAG:
-                        if(tagname.equals(XML_Ele.header.toString())){
-                            Log.d("XML TEST", "End " + xpp.getName());
+                        if(tagName.equals(XML_Ele.header.toString())){
+                            // Log.d("XML TEST", "End " + xpp.getName());
+                            // Add this header object to object of header objects
+                            // Header, Child data
+                            listDataChild.put(listDataHeader.get(headings), heading);
+                            headings++;
                         }
-                        if(tagname.equals(XML_Ele.item.toString())){
+                        if(tagName.equals(XML_Ele.item.toString())){
                             //Log.d("XML TEST", "" + xpp.getName());
-                        }
-                        if(tagname.equals(XML_Ele.name.toString())){
-                            //Log.d("XML TEST", "" + xpp.getName());
-                            //Log.d("XML TEST", "" + xpp.getAttributeValue(0));
-                        }
-                        if(tagname.equals(XML_Ele.image.toString())){
-                            //Log.d("XML TEST", "" + xpp.getName());
-                            //Log.d("XML TEST", "" + xpp.getAttributeValue(0));
                         }
                         break;
                     default:
                         break;
                 }
-                eventtype = xpp.next();
+                eventType = xpp.next();
             }
 
         } catch (Exception e) {
             Log.e("XML ERROR", e.getMessage());
         }
 
+        listDataChild.put(listDataHeader.get(headings), heading);
+        return navMenu = new MenuModel(listDataHeader, listDataChild);
     }
 
     private static String getStringResourceByName(Context ctx, String aString) {
-        //TODO This is returning 0 for some reason
-        // http://stackoverflow.com/questions/7493287/android-how-do-i-get-string-from-resources-using-its-name
-        String packageName = ctx.getPackageName();
-        Log.d("XML TEST", "" + packageName);
-        Log.d("XML TEST", "" + aString);
-        int resId = ctx.getResources().getIdentifier(aString, "string", packageName);
-        Log.d("XML TEST", "" + resId);
+        //String rPackageName = ctx.getResources().getResourcePackageName(R.string.brush);
+        int resId = ctx.getResources().getIdentifier(aString, "string", ctx.getPackageName());
         return ctx.getString(resId);
     }
+
 }
