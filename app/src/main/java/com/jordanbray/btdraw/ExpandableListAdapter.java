@@ -102,16 +102,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater li = (LayoutInflater) this.mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = li.inflate(R.layout.list_menu, null);
+            //convertView = li.inflate(R.layout.list_menu, null);
+            convertView = li.inflate(R.layout.listheader, null);
         }
 
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.submenu);
         ImageView itemIcon = (ImageView) convertView.findViewById(R.id.iconimage);
         txtListChild.setText(childText.getIconName());
-        //itemIcon.setImageResource(childText.getIconImg());
+        itemIcon.setImageResource(childText.getIconImg());
 
-        //txtListChild.setText(childText);
         return convertView;
     }
 
