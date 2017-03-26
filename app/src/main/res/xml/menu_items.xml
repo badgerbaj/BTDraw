@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu_items">
+    <header value="@string/tools" image="@android:drawable/ic_delete">
+        <item value="@string/brush" image="@string/brush" />
+        <item value="@string/erase" image="@string/erase" />
+        <item value="@string/color_picker" image="@string/color_picker" />
+        <item value="@string/line" image="@string/line" />
+        <item value="@string/rectangle" image="@string/rectangle" />
+        <item value="@string/oval" image="@string/oval" />
+    </header>
+    <header value="@string/object_size" image="@string/object_size">
+        <item value="@string/object_small" image="@string/object_small" />
+        <item value="@string/object_medium" image="@string/object_medium" />
+        <item value="@string/object_large" image="@string/object_large" />
+    </header>
+    <header value="@string/color" image="@string/color">
+        <item value="@string/color_red" image="@string/color_red" />
+        <item value="@string/color_orange" image="@string/color_orange" />
+        <item value="@string/color_yellow" image="@string/color_yellow" />
+        <item value="@string/color_green" image="@string/color_green" />
+        <item value="@string/color_blue" image="@string/color_blue" />
+        <item value="@string/color_purple" image="@string/color_purple" />
+        <item value="@string/color_pink" image="@string/color_pink" />
+        <item value="@string/color_white" image="@string/color_white" />
+        <item value="@string/color_grey" image="@string/color_grey" />
+        <item value="R.string.color_black" image="R.string.color_black" />
+    </header>
+</menu>
