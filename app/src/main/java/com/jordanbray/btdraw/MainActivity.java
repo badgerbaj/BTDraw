@@ -74,15 +74,15 @@ public class MainActivity extends AppCompatActivity
                 //drawer.closeDrawers();
 
                 if (currentItem.equals(getString(R.string.brush))) {
-                    // Handle the brush action
+                    av.setMode(0);
                 } else if (currentItem.equals(getString(R.string.erase))) {
                     av.Erase();
                 } else if (currentItem.equals(getString(R.string.object_small))) {
-                    // Handle the small brush action
+                    av.setBrushSize(1);
                 } else if (currentItem.equals(getString(R.string.object_medium))) {
-                    // Handle the medium brush action
+                    av.setBrushSize(2);
                 } else if (currentItem.equals(getString(R.string.object_large))) {
-                    // Handle the large brush action
+                    av.setBrushSize(3);
                 } else if (currentItem.equals(getString(R.string.color_red))) {
                     av.setPaintColor(Color.RED);
                 } else if (currentItem.equals(getString(R.string.color_orange))) {
@@ -103,6 +103,14 @@ public class MainActivity extends AppCompatActivity
                     av.setPaintColor(Color.LTGRAY);
                 } else if (currentItem.equals(getString(R.string.color_black))) {
                     av.setPaintColor(Color.BLACK);
+                } else if (currentItem.equals("Line")) {
+                    av.setMode(3);
+                } else if (currentItem.equals("Rectangle")) {
+                    av.setMode(1);
+                } else if (currentItem.equals("Oval")) {
+                    av.setMode(2);
+                } else if (currentItem.equals("Color Picker")) {
+                    av.setMode(4);
                 }
 
                 return false;

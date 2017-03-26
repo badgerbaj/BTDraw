@@ -3,13 +3,19 @@ package com.jordanbray.btdraw;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Created by bjordan on 3/21/2017.
@@ -80,67 +86,97 @@ public class ArtistView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // modes:
+        // 0 - Brush
+        // 1 - Rectangle
+        // 2 - Oval
+        // 3 - Line
+        // 4 - Color Picker
+        // 5 - Bucket Fill
+
         float x = event.getX();
         float y = event.getY();
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (mode == 0) {
-                path.moveTo(x, y);
-            }
-            if (mode == 1) {
-                upperleft.x = x;
-                upperleft.y = y;
-                lowerright.x = x;
-                lowerright.y = y;
-            }
-            if (mode == 2) {
-                upperleft.x = x;
-                upperleft.y = y;
-                lowerright.x = x;
-                lowerright.y = y;
-            }
-            if (mode == 3) {
-                upperleft.x = x;
-                upperleft.y = y;
-                lowerright.x = x;
-                lowerright.y = y;
+            switch (mode) {
+                case 0:
+                    canvas.drawPoint(x, y, paint);
+                    path.moveTo(x, y);
+                    break;
+
+                case 1:
+                case 2:
+                case 3:
+                    upperleft.x = x;
+                    upperleft.y = y;
+                    lowerright.x = x;
+                    lowerright.y = y;
+                    break;
+                case 4:
+                case 5:
+                    upperleft.x = x;
+                    upperleft.y = y;
+                default:
+                    break;
             }
 
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            if (mode == 0) {
-                path.lineTo(x, y);
-            }
-            if (mode == 1) {
-                lowerright.x = x;
-                lowerright.y = y;
-            }
-            if (mode == 2) {
-                lowerright.x = x;
-                lowerright.y = y;
-            }
-            if (mode == 3) {
-                lowerright.x = x;
-                lowerright.y = y;
+            switch (mode) {
+                case 0:
+                    path.lineTo(x, y);
+                    break;
+
+                case 1:
+                case 2:
+                case 3:
+                    lowerright.x = x;
+                    lowerright.y = y;
+                    break;
+                default:
+                    break;
             }
 
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (mode == 0) {
-                canvas.drawPath(path, paint);
-                path.reset();
-            }
-            if (mode == 1) {
-                canvas.drawRect(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
-                invalidate();
-            }
-            if (mode == 2) {
-                RectF rec = new RectF(upperleft.x,  upperleft.y, lowerright.x, lowerright.y);
-                canvas.drawOval(rec, paint);
-                invalidate();
-            }
-            if (mode == 3) {
-                canvas.drawLine(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
-                invalidate();
-            }
+            switch (mode) {
+                case 0:
+                    canvas.drawPath(path, paint);
+                    path.reset();
+                    break;
+
+                case 1:
+                    canvas.drawRect(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
+                    invalidate();
+                    break;
+
+                case 2:
+                    RectF rec = new RectF(upperleft.x,  upperleft.y, lowerright.x, lowerright.y);
+                    canvas.drawOval(rec, paint);
+                    invalidate();
+                    break;
+                case 3:
+                    canvas.drawLine(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
+                    invalidate();
+                    break;
+                case 4:
+                    ColorPicker(upperleft.x,  upperleft.y);
+                    invalidate();
+                    break;
+                case 5:
+                    /*
+                    int pixel = canvasBitmap.getPixel(Math.round(x), Math.round(y));
+                    int red = Color.red(pixel);
+                    int green = Color.green(pixel);
+                    int blue = Color.blue(pixel);
+                    int basecolor = Color.argb(1023, red, green, blue);
+                    Point pt = new Point(Math.round(x),Math.round(y));
+                    PaintBucket(canvasBitmap, pt, basecolor, paintColor);
+                    invalidate();
+                    break;
+                    */
+
+                default:
+                    break;
+             }
         }
         else {
             return false;
@@ -160,15 +196,73 @@ public class ArtistView extends View {
         paint.setColor(paintColor);
     }
 
+    public void ColorPicker (float x, float y) {
+        invalidate();
+        int pixel = canvasBitmap.getPixel(Math.round(x), Math.round(y));
+        int red = Color.red(pixel);
+        int green = Color.green(pixel);
+        int blue = Color.blue(pixel);
+        paintColor = Color.argb(1023, red, green, blue);
+        setPaintColor(paintColor);
+    }
+
+    /* public void PaintBucket (Bitmap bmp, Point pt, int targetColor, int replacementColor) {
+            Queue<Point> q = new LinkedList<Point>();
+            q.add(pt);
+            while (q.size() > 0) {
+                Point n = q.poll();
+                if (bmp.getPixel(n.x, n.y) != targetColor)
+                    continue;
+
+                Point w = n, e = new Point(n.x + 1, n.y);
+
+                while ((w.x > 0) && (bmp.getPixel(w.x, w.y) == targetColor)) {
+                    bmp.setPixel(w.x, w.y, replacementColor);
+                    if ((w.y > 0) && (bmp.getPixel(w.x, w.y - 1) == targetColor))
+                        q.add(new Point(w.x, w.y - 1));
+                    if ((w.y < bmp.getHeight() - 1) && (bmp.getPixel(w.x, w.y + 1) == targetColor))
+                        q.add(new Point(w.x, w.y + 1));
+
+                    w.x--;
+                }
+
+                while ((e.x < bmp.getWidth() - 1) && (bmp.getPixel(e.x, e.y) == targetColor)) {
+                    bmp.setPixel(e.x, e.y, replacementColor);
+                    if ((e.y > 0) && (bmp.getPixel(e.x, e.y - 1) == targetColor))
+                        q.add(new Point(e.x, e.y - 1));
+                    if ((e.y < bmp.getHeight() - 1) && (bmp.getPixel(e.x, e.y + 1) == targetColor))
+                        q.add(new Point(e.x, e.y + 1));
+
+                    e.x++;
+                }
+            }
+            q.clear();
+        }
+*/
+
+
+
+    public void setBrushSize (int i) {
+        invalidate();
+        if (i == 1) {
+            paint.setStrokeWidth(10);
+        }
+        if (i == 2) {
+            paint.setStrokeWidth(20);
+        }
+        if (i == 3) {
+            paint.setStrokeWidth(30);
+        }
+    }
+
     public void Erase () {
         invalidate();
         paintColor = canvasColor;
         paint.setColor(paintColor);
     }
 
-    public void setCanvasColor () {
-        canvas.drawColor(canvasColor);
-    }
+
+
 
 
 
