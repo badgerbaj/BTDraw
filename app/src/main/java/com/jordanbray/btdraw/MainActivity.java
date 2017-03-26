@@ -1,9 +1,12 @@
 package com.jordanbray.btdraw;
 
+import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.ViewDragHelper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
+        setDrawerLeftEdgeSize(this, drawer);
         toggle.syncState();
 
         expandableList = (ExpandableListView) findViewById(R.id.navigationmenu);
@@ -175,5 +180,32 @@ public class MainActivity extends AppCompatActivity
         // NOTE: This method is no longer used
 
         return true;
+    }
+
+    // Prevent the Navigation Drawer from sliding out while drawing
+    public static void setDrawerLeftEdgeSize(Activity activity, DrawerLayout drawerLayout) {
+        if (activity == null || drawerLayout == null)
+            return;
+
+        try {
+            // find ViewDragHelper and set it accessible
+            Field leftDraggerField = drawerLayout.getClass().getDeclaredField("mLeftDragger");
+            leftDraggerField.setAccessible(true);
+            ViewDragHelper leftDragger = (ViewDragHelper) leftDraggerField.get(drawerLayout);
+            // find edgesize and set is accessible
+            Field edgeSizeField = leftDragger.getClass().getDeclaredField("mEdgeSize");
+            edgeSizeField.setAccessible(true);
+            int edgeSize = edgeSizeField.getInt(leftDragger);
+            // set new edgesize
+            Point displaySize = new Point();
+            activity.getWindowManager().getDefaultDisplay().getSize(displaySize);
+            edgeSizeField.setInt(leftDragger, 0); //Math.max(edgeSize, (int) (displaySize.x * displayWidthPercentage)));
+        } catch (NoSuchFieldException e) {
+            // ignore
+        } catch (IllegalArgumentException e) {
+            // ignore
+        } catch (IllegalAccessException e) {
+            // ignore
+        }
     }
 }
