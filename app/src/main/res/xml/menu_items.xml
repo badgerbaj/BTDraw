@@ -14,7 +14,7 @@
         <item value="@string/object_medium" image="@drawable/ic_object_medium" />
         <item value="@string/object_large" image="@drawable/ic_object_large" />
     </header>
-    <header value="@string/color" image="@drawable/ic_color_red">
+    <header value="@string/color" image="@drawable/ic_color_black">
         <item value="@string/color_red" image="@drawable/ic_color_red" />
         <item value="@string/color_orange" image="@drawable/ic_color_orange" />
         <item value="@string/color_yellow" image="@drawable/ic_color_yellow" />
