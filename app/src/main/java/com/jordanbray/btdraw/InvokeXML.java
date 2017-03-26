@@ -73,15 +73,15 @@ public class InvokeXML extends  MainActivity {
                             //Log.d("XML TEST", "" + xpp.getName());
                             //Log.d("XML TEST", "" +
                             //       getStringResourceByName(ctx, xpp.getAttributeValue(0)));
-                            Log.d("XML TEST", "" +
-                                    getResourceByName(ctx, xpp.getAttributeValue(1), XML_Ele.drawable.toString()));
+                            //Log.d("XML TEST", "" +
+                            //        getResourceByName(ctx, xpp.getAttributeValue(1), XML_Ele.drawable.toString()));
                             // Create new header object
                             // Adding data header
                             ExpandedMenuModel item = new ExpandedMenuModel();
                             heading = new ArrayList<ExpandedMenuModel>();
 
-                            item.setIconName(getResourceByName(ctx, xpp.getAttributeValue(0), XML_Ele.string.toString()));
-                            item.setIconImg(android.R.drawable.ic_delete);
+                            item.setIconName(getStringResourceByName(ctx, xpp.getAttributeValue(0), XML_Ele.string.toString()));
+                            item.setIconImg(getIntResourceByName(ctx, xpp.getAttributeValue(1), XML_Ele.drawable.toString()));
                             listDataHeader.add(item);
                         }
                         if(tagName.equals(XML_Ele.item.toString())){
@@ -91,7 +91,8 @@ public class InvokeXML extends  MainActivity {
                             // Adding child data
 
                             ExpandedMenuModel menuItem = new ExpandedMenuModel();
-                            menuItem.setIconName(getResourceByName(ctx, xpp.getAttributeValue(0), XML_Ele.string.toString()));
+                            menuItem.setIconName(getStringResourceByName(ctx, xpp.getAttributeValue(0), XML_Ele.string.toString()));
+                            menuItem.setIconImg(getIntResourceByName(ctx, xpp.getAttributeValue(1), XML_Ele.drawable.toString()));
                             heading.add(menuItem);
                         }
                         break;
@@ -122,13 +123,18 @@ public class InvokeXML extends  MainActivity {
             Log.e("XML ERROR", e.getMessage());
         }
 
-        listDataChild.put(listDataHeader.get(headings), heading);
+        //listDataChild.put(listDataHeader.get(2), heading);
         return navMenu = new MenuModel(listDataHeader, listDataChild);
     }
 
-    private static String getResourceByName(Context ctx, String aString, String resourceType) {
+    private static String getStringResourceByName(Context ctx, String aString, String resourceType) {
         //String rPackageName = ctx.getResources().getResourcePackageName(R.string.brush);
         int resId = ctx.getResources().getIdentifier(aString, resourceType, ctx.getPackageName());
         return ctx.getString(resId);
+    }
+    private static int getIntResourceByName(Context ctx, String aString, String resourceType) {
+        //String rPackageName = ctx.getResources().getResourcePackageName(R.string.brush);
+        int resId;
+        return resId = ctx.getResources().getIdentifier(aString, resourceType, ctx.getPackageName());
     }
 }

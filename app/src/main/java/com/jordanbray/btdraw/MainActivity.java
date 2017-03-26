@@ -1,10 +1,14 @@
 package com.jordanbray.btdraw;
 
+import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.ViewDragHelper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +22,7 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +51,7 @@ public class MainActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
+        setDrawerLeftEdgeSize(this, drawer);
         toggle.syncState();
 
         expandableList = (ExpandableListView) findViewById(R.id.navigationmenu);
@@ -66,10 +72,13 @@ public class MainActivity extends AppCompatActivity
 
                 String currentItem = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconName();
 
-                Toast.makeText(MainActivity.this, "clicked " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconName(), Toast.LENGTH_SHORT).show();
+                // Set Selected item to header icon
+                listDataHeader.get(groupPosition).setIconImg(listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconImg());
+                //Toast.makeText(MainActivity.this, "clicked " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconName(), Toast.LENGTH_SHORT).show();
 
                 int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
                 parent.setItemChecked(index, true);
+                parent.collapseGroup(groupPosition);
 
                 //drawer.closeDrawers();
 
@@ -83,6 +92,9 @@ public class MainActivity extends AppCompatActivity
                     av.setBrushSize(2);
                 } else if (currentItem.equals(getString(R.string.object_large))) {
                     av.setBrushSize(3);
+                    // Handle the large brush action
+                } else if (currentItem.equals(getString(R.string.color_custom))) {
+                    // show color picker
                 } else if (currentItem.equals(getString(R.string.color_red))) {
                     av.setPaintColor(Color.RED);
                 } else if (currentItem.equals(getString(R.string.color_orange))) {
@@ -126,95 +138,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void prepareListData() {
-        //listDataHeader = new ArrayList<ExpandedMenuModel>();
-        //listDataChild = new HashMap<ExpandedMenuModel, List<ExpandedMenuModel>>();
+
         navMenu = InvokeXML.readMenuItemsXML(getApplicationContext());
         listDataHeader = navMenu.getListDataHeader();
         listDataChild = navMenu.getListDataChild();
-
-        /*
-        // Adding data header
-        ExpandedMenuModel item1 = new ExpandedMenuModel();
-        item1.setIconName(getString(R.string.tools));
-        item1.setIconImg(android.R.drawable.ic_delete);
-        listDataHeader.add(item1);
-
-        // Adding child data
-        List<ExpandedMenuModel> heading1 = new ArrayList<ExpandedMenuModel>();
-        ExpandedMenuModel menuItem = new ExpandedMenuModel();
-
-        menuItem.setIconName(getString(R.string.brush));
-        heading1.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.erase));
-        heading1.add(menuItem);
-
-        // Header, Child data
-        listDataChild.put(listDataHeader.get(0), heading1);
-
-        // Adding data header
-        ExpandedMenuModel item2 = new ExpandedMenuModel();
-        item2.setIconName(getString(R.string.object_size));
-        item2.setIconImg(android.R.drawable.ic_delete);
-        listDataHeader.add(item2);
-
-        // Adding child data
-        List<ExpandedMenuModel> heading2 = new ArrayList<ExpandedMenuModel>();
-
-        menuItem.setIconName(getString(R.string.object_small));
-        heading2.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.object_medium));
-        heading2.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.object_large));
-        heading2.add(menuItem);
-
-        // Header, Child data
-        listDataChild.put(listDataHeader.get(1), heading2);
-
-        // Adding data header
-        ExpandedMenuModel item3 = new ExpandedMenuModel();
-        item3.setIconName(getString(R.string.color));
-        item3.setIconImg(android.R.drawable.ic_delete);
-        listDataHeader.add(item3);
-
-        // Adding child data
-        List<ExpandedMenuModel> heading3 = new ArrayList<ExpandedMenuModel>();
-
-        menuItem.setIconName(getString(R.string.color_red));
-        heading3.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.color_orange));
-        heading3.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.color_yellow));
-        heading3.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.color_green));
-        heading3.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.color_blue));
-        heading3.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.color_purple));
-        heading3.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.color_pink));
-        heading3.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.color_white));
-        heading3.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.color_grey));
-        heading3.add(menuItem);
-
-        menuItem.setIconName(getString(R.string.color_black));
-        heading3.add(menuItem);
-
-        // Header, Child data
-        listDataChild.put(listDataHeader.get(2), heading3);
-        */
     }
 
     @Override
@@ -244,6 +171,12 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_load) {
+
+        } else if (id == R.id.action_save) {
+
+        } else if (id == R.id.action_start_new) {
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -255,38 +188,33 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here
         // NOTE: This method is no longer used
 
-        /*
-        int id = item.getItemId();
-
-        if (id == R.id.nav_brush) {
-            // Handle the camera action
-        } else if (id == R.id.nav_erase) {
-            av.Erase();
-        } else if (id == R.id.color_red) {
-            av.setPaintColor(Color.RED);
-        } else if (id == R.id.color_orange) {
-            av.setPaintColor(0xFFFFA500);
-        } else if (id == R.id.color_yellow) {
-            av.setPaintColor(Color.YELLOW);
-        } else if (id == R.id.color_green) {
-            av.setPaintColor(Color.GREEN);
-        } else if (id == R.id.color_blue) {
-            av.setPaintColor(Color.BLUE);
-        } else if (id == R.id.color_purple) {
-            av.setPaintColor(0xFF551A8B);
-        } else if (id == R.id.color_pink) {
-            av.setPaintColor(0xFFFF69B4);
-        } else if (id == R.id.color_white) {
-            av.setPaintColor(Color.WHITE);
-        } else if (id == R.id.color_grey) {
-            av.setPaintColor(Color.LTGRAY);
-        } else if (id == R.id.color_black) {
-            av.setPaintColor(Color.BLACK);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        */
         return true;
+    }
+
+    // Prevent the Navigation Drawer from sliding out while drawing
+    public static void setDrawerLeftEdgeSize(Activity activity, DrawerLayout drawerLayout) {
+        if (activity == null || drawerLayout == null)
+            return;
+
+        try {
+            // find ViewDragHelper and set it accessible
+            Field leftDraggerField = drawerLayout.getClass().getDeclaredField("mLeftDragger");
+            leftDraggerField.setAccessible(true);
+            ViewDragHelper leftDragger = (ViewDragHelper) leftDraggerField.get(drawerLayout);
+            // find edgesize and set is accessible
+            Field edgeSizeField = leftDragger.getClass().getDeclaredField("mEdgeSize");
+            edgeSizeField.setAccessible(true);
+            int edgeSize = edgeSizeField.getInt(leftDragger);
+            // set new edgesize
+            Point displaySize = new Point();
+            activity.getWindowManager().getDefaultDisplay().getSize(displaySize);
+            edgeSizeField.setInt(leftDragger, 0); //Math.max(edgeSize, (int) (displaySize.x * displayWidthPercentage)));
+        } catch (NoSuchFieldException e) {
+            // ignore
+        } catch (IllegalArgumentException e) {
+            // ignore
+        } catch (IllegalAccessException e) {
+            // ignore
+        }
     }
 }
