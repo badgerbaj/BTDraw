@@ -3,13 +3,16 @@
     android:id="@+id/menu_items">
     <header value="@string/tools" image="@drawable/ic_paint_fill">
         <item value="@string/brush" image="@drawable/ic_paint_fill" />
+        <item value="@string/paint_bucket" image="@drawable/ic_paint_fill" />
         <item value="@string/erase" image="@drawable/ic_erase" />
         <item value="@string/color_picker" image="@drawable/ic_color_picker" />
         <item value="@string/line" image="@drawable/ic_line" />
         <item value="@string/rectangle" image="@drawable/ic_rectangle" />
+        <item value="@string/fill_rectangle" image="@drawable/ic_fill_rectangle" />
         <item value="@string/oval" image="@drawable/ic_oval" />
+        <item value="@string/fill_oval" image="@drawable/ic_fill_oval" />
     </header>
-    <header value="@string/object_size" image="@drawable/ic_object_medium">
+    <header value="@string/object_size" image="@drawable/ic_object_small">
         <item value="@string/object_small" image="@drawable/ic_object_small" />
         <item value="@string/object_medium" image="@drawable/ic_object_medium" />
         <item value="@string/object_large" image="@drawable/ic_object_large" />

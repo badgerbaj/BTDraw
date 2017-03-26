@@ -115,14 +115,16 @@ public class MainActivity extends AppCompatActivity
                     av.setPaintColor(Color.LTGRAY);
                 } else if (currentItem.equals(getString(R.string.color_black))) {
                     av.setPaintColor(Color.BLACK);
-                } else if (currentItem.equals("Line")) {
+                } else if (currentItem.equals(getString(R.string.line))) {
                     av.setMode(3);
-                } else if (currentItem.equals("Rectangle")) {
+                } else if (currentItem.equals(getString(R.string.rectangle))) {
                     av.setMode(1);
-                } else if (currentItem.equals("Oval")) {
+                } else if (currentItem.equals(getString(R.string.oval))) {
                     av.setMode(2);
-                } else if (currentItem.equals("Color Picker")) {
+                } else if (currentItem.equals(getString(R.string.color_picker))) {
                     av.setMode(4);
+                } else if (currentItem.equals(getString(R.string.paint_bucket))) {
+                    av.setMode(5);
                 }
 
                 return false;
