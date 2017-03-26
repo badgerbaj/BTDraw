@@ -9,6 +9,7 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -32,6 +33,7 @@ public class ArtistView extends View {
     private Bitmap canvasBitmap;
     PointF upperleft = new PointF(0,0);
     PointF lowerright = new PointF(0,0);
+    UpdateTask ut;
 
 
     public ArtistView(Context context) {
@@ -162,17 +164,21 @@ public class ArtistView extends View {
                     invalidate();
                     break;
                 case 5:
-                    /*
+
                     int pixel = canvasBitmap.getPixel(Math.round(x), Math.round(y));
                     int red = Color.red(pixel);
                     int green = Color.green(pixel);
                     int blue = Color.blue(pixel);
                     int basecolor = Color.argb(1023, red, green, blue);
+                    int height = canvasBitmap.getHeight();
+                    int width = canvasBitmap.getWidth();
                     Point pt = new Point(Math.round(x),Math.round(y));
-                    PaintBucket(canvasBitmap, pt, basecolor, paintColor);
-                    invalidate();
+                    PaintParams pp = new PaintParams(pt, basecolor, height, width);
+                    if (basecolor != paintColor) {
+                        startPaint(pp);
+                    }
                     break;
-                    */
+
 
                 default:
                     break;
@@ -181,8 +187,9 @@ public class ArtistView extends View {
         else {
             return false;
         }
-
-        invalidate();
+        if (mode == 0) {
+            invalidate();
+        }
         return true;
     }
 
@@ -190,6 +197,18 @@ public class ArtistView extends View {
         mode = i;
     }
 
+    public void startPaint (PaintParams pp) {
+        if (ut != null && ut.getStatus() == AsyncTask.Status.FINISHED){
+            ut = null;
+        }
+        if (ut == null) {
+            ut = new UpdateTask();
+            ut.execute(pp);
+        }
+        else {
+            Log.i("Paint", "Bucket is already running");
+        }
+    }
     public void setPaintColor (int i) {
         invalidate();
         paintColor = i;
@@ -206,39 +225,67 @@ public class ArtistView extends View {
         setPaintColor(paintColor);
     }
 
-    /* public void PaintBucket (Bitmap bmp, Point pt, int targetColor, int replacementColor) {
-            Queue<Point> q = new LinkedList<Point>();
-            q.add(pt);
-            while (q.size() > 0) {
-                Point n = q.poll();
-                if (bmp.getPixel(n.x, n.y) != targetColor)
-                    continue;
+    private static class PaintParams {
+        Point point;
+        int basecolor;
+        int height;
+        int width;
 
-                Point w = n, e = new Point(n.x + 1, n.y);
-
-                while ((w.x > 0) && (bmp.getPixel(w.x, w.y) == targetColor)) {
-                    bmp.setPixel(w.x, w.y, replacementColor);
-                    if ((w.y > 0) && (bmp.getPixel(w.x, w.y - 1) == targetColor))
-                        q.add(new Point(w.x, w.y - 1));
-                    if ((w.y < bmp.getHeight() - 1) && (bmp.getPixel(w.x, w.y + 1) == targetColor))
-                        q.add(new Point(w.x, w.y + 1));
-
-                    w.x--;
-                }
-
-                while ((e.x < bmp.getWidth() - 1) && (bmp.getPixel(e.x, e.y) == targetColor)) {
-                    bmp.setPixel(e.x, e.y, replacementColor);
-                    if ((e.y > 0) && (bmp.getPixel(e.x, e.y - 1) == targetColor))
-                        q.add(new Point(e.x, e.y - 1));
-                    if ((e.y < bmp.getHeight() - 1) && (bmp.getPixel(e.x, e.y + 1) == targetColor))
-                        q.add(new Point(e.x, e.y + 1));
-
-                    e.x++;
-                }
-            }
-            q.clear();
+        PaintParams(Point pt, int base, int h, int w) {
+            this.point = pt;
+            this.basecolor = base;
+            this.height = h;
+            this.width = w;
         }
-*/
+    }
+
+    class UpdateTask extends AsyncTask<PaintParams, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(PaintParams... ps) {
+                Queue<Point> pointList = new LinkedList<Point>();
+                pointList.add(ps[0].point);
+                while (pointList.size() > 0) {
+                    Point n = pointList.poll();
+                    if (canvasBitmap.getPixel(n.x, n.y) != ps[0].basecolor)
+                        continue;
+
+                    Point w = n, e = new Point(n.x + 1, n.y);
+
+                    while ((w.x > 0) && (canvasBitmap.getPixel(w.x, w.y) == ps[0].basecolor)) {
+                        canvasBitmap.setPixel(w.x, w.y, paintColor);
+                        if ((w.y > 0) && (canvasBitmap.getPixel(w.x, w.y - 1) == ps[0].basecolor))
+                            pointList.add(new Point(w.x, w.y - 1));
+                        if ((w.y < ps[0].height - 1) && (canvasBitmap.getPixel(w.x, w.y + 1) == ps[0].basecolor))
+                            pointList.add(new Point(w.x, w.y + 1));
+
+                        w.x--;
+                    }
+
+                    while ((e.x < ps[0].width - 1) && (canvasBitmap.getPixel(e.x, e.y) == ps[0].basecolor)) {
+                        canvasBitmap.setPixel(e.x, e.y, paintColor);
+                        if ((e.y > 0) && (canvasBitmap.getPixel(e.x, e.y - 1) == ps[0].basecolor))
+                            pointList.add(new Point(e.x, e.y - 1));
+                        if ((e.y < ps[0].height - 1) && (canvasBitmap.getPixel(e.x, e.y + 1) == ps[0].basecolor))
+                            pointList.add(new Point(e.x, e.y + 1));
+
+                        e.x++;
+                    }
+
+            }
+            pointList.clear();
+            return true;
+        }
+        protected void onPostExecute(Boolean fin) {
+            invalidate();
+            ut = null;
+        }
+
+    }
+
+
+
+
 
 
 
