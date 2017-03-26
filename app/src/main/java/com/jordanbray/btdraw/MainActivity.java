@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity
                     // Handle the medium brush action
                 } else if (currentItem.equals(getString(R.string.object_large))) {
                     // Handle the large brush action
+                } else if (currentItem.equals(getString(R.string.color_custom))) {
+                    // show color picker
                 } else if (currentItem.equals(getString(R.string.color_red))) {
                     av.setPaintColor(Color.RED);
                 } else if (currentItem.equals(getString(R.string.color_orange))) {
