@@ -110,23 +110,22 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.submenu);
-        txtListChild.setText(childText.getIconName());
+
 
         ImageView itemIcon = (ImageView) convertView.findViewById(R.id.iconimage);
         itemIcon.setImageResource(childText.getIconImg());
 
-        /*
+
         if(childText.getIconName().equals("Custom")) {
-            //EditText et = (EditText) convertView.findViewById(R.id.editText_submenu);
-            //et.setVisibility(View.VISIBLE);
-            //et.setText(childText.getIconName());
-            //itemIcon.setBackgroundColor(Color.rgb(100, 100, 50));
-            //txtListChild.setVisibility(View.GONE);
+            EditText et = (EditText) convertView.findViewById(R.id.editText_submenu);
+            et.setVisibility(View.VISIBLE);
+            et.setText(childText.getIconName());
+            itemIcon.setBackgroundColor(Color.rgb(100, 100, 50));
+            txtListChild.setVisibility(View.GONE);
         } else {
-
-
+            txtListChild.setText(childText.getIconName());
         }
-        */
+
 
         return convertView;
     }
