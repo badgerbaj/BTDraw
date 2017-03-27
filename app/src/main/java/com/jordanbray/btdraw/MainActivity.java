@@ -1,6 +1,8 @@
 package com.jordanbray.btdraw;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -20,7 +22,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -33,6 +38,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    final Context context = this;
     private ArtistView av;
     private DrawerLayout drawer;
     private ExpandableListAdapter mMenuAdapter;
@@ -223,5 +229,85 @@ public class MainActivity extends AppCompatActivity
         } catch (IllegalAccessException e) {
             // ignore
         }
+    }
+
+    public int showDialog() {
+        int colorValue = 0;
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.custom_color);
+        dialog.setTitle("SELECT CUSTOM COLOR");
+
+        // set the custom dialog components - text, image and button
+        final TextView colortv = (TextView) dialog.findViewById(R.id.color_textView);
+        final TextView redtvValue = (TextView)dialog.findViewById(R.id.red_textView_value);
+        final TextView greentvValue = (TextView)dialog.findViewById(R.id.green_textView_value);
+        final TextView bluetvValue = (TextView)dialog.findViewById(R.id.blue_textView_value);
+        SeekBar red = (SeekBar)dialog.findViewById(R.id.red_seekBar);
+        SeekBar green = (SeekBar)dialog.findViewById(R.id.green_seekBar);
+        SeekBar blue = (SeekBar)dialog.findViewById(R.id.blue_seekBar);
+
+        Button ok_button = (Button) dialog.findViewById(R.id.ok_button);
+        // if button is clicked, close the custom dialog
+        ok_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        Button cancel_button = (Button) dialog.findViewById(R.id.cancel_button);
+        // if button is clicked, close the custom dialog
+        cancel_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+        red.setMax(255);
+        green.setMax(255);
+        blue.setMax(255);
+
+        red.setKeyProgressIncrement(1);
+        green.setKeyProgressIncrement(1);
+        blue.setKeyProgressIncrement(1);
+
+        red.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                redtvValue.setText(Integer.toString(progress));
+                colortv.setBackgroundColor(Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString())));
+
+            }
+            public void onStartTrackingTouch(SeekBar arg0) {
+            }
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+        green.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                greentvValue.setText(Integer.toString(progress));
+                colortv.setBackgroundColor(Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString())));
+            }
+            public void onStartTrackingTouch(SeekBar arg0) {
+            }
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+        blue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+                bluetvValue.setText(Integer.toString(progress));
+                colortv.setBackgroundColor(Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString())));
+            }
+            public void onStartTrackingTouch(SeekBar arg0) {
+            }
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+
+
+        dialog.show();
+        return colorValue;
     }
 }
