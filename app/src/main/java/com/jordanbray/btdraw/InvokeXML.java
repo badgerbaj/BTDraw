@@ -47,7 +47,10 @@ public class InvokeXML extends  MainActivity {
         header,
         item,
         string,
-        drawable
+        drawable,
+        value,
+        image,
+        action
     }
 
     public static MenuModel readMenuItemsXML(Context ctx) {
@@ -56,8 +59,6 @@ public class InvokeXML extends  MainActivity {
         int headings = 0;
         listDataHeader = new ArrayList<ExpandedMenuModel>();
         listDataChild = new HashMap<ExpandedMenuModel, List<ExpandedMenuModel>>();
-        MenuModel navMenu;
-
         List<ExpandedMenuModel> heading = new ArrayList<ExpandedMenuModel>();
 
         try {
@@ -70,29 +71,36 @@ public class InvokeXML extends  MainActivity {
                 switch (eventType){
                     case XmlPullParser.START_TAG:
                         if(tagName.equals(XML_Ele.header.toString())){
-                            //Log.d("XML TEST", "" + xpp.getName());
-                            //Log.d("XML TEST", "" +
-                            //       getStringResourceByName(ctx, xpp.getAttributeValue(0)));
-                            //Log.d("XML TEST", "" +
-                            //        getResourceByName(ctx, xpp.getAttributeValue(1), XML_Ele.drawable.toString()));
                             // Create new header object
                             // Adding data header
                             ExpandedMenuModel item = new ExpandedMenuModel();
                             heading = new ArrayList<ExpandedMenuModel>();
 
-                            item.setIconName(getStringResourceByName(ctx, xpp.getAttributeValue(0), XML_Ele.string.toString()));
-                            item.setIconImg(getIntResourceByName(ctx, xpp.getAttributeValue(1), XML_Ele.drawable.toString()));
+                            item.setIconName(getStringResourceByName(ctx, xpp.getAttributeValue(null, XML_Ele.value.toString()), XML_Ele.string.toString()));
+                            item.setIconImg(getIntResourceByName(ctx, xpp.getAttributeValue(null, XML_Ele.image.toString()), XML_Ele.drawable.toString()));
+                            if(!item.getIconName().equals(ctx.getString(R.string.color))) {
+                                item.setAvAction(Integer.parseInt(xpp.getAttributeValue(null, XML_Ele.action.toString())));
+                            } else item.setAvAction(Long.parseLong(xpp.getAttributeValue(null, XML_Ele.action.toString()), 16));
                             listDataHeader.add(item);
                         }
                         if(tagName.equals(XML_Ele.item.toString())){
-                            //Log.d("XML TEST", "" + xpp.getName());
-                            //Log.d("XML TEST", "" + xpp.getAttributeValue(0));
                             // Create new item header object, add to header object
                             // Adding child data
+                            String value =  xpp.getAttributeValue(null, XML_Ele.value.toString());
+                            String headingName = listDataHeader.get(headings).getIconName();
+
 
                             ExpandedMenuModel menuItem = new ExpandedMenuModel();
-                            menuItem.setIconName(getStringResourceByName(ctx, xpp.getAttributeValue(0), XML_Ele.string.toString()));
-                            menuItem.setIconImg(getIntResourceByName(ctx, xpp.getAttributeValue(1), XML_Ele.drawable.toString()));
+                            menuItem.setIconName(getStringResourceByName(ctx, value, XML_Ele.string.toString()));
+                            menuItem.setIconImg(getIntResourceByName(ctx, xpp.getAttributeValue(null, XML_Ele.image.toString()), XML_Ele.drawable.toString()));
+                            if(headingName.equals(ctx.getString(R.string.color))) {
+                                menuItem.setAvAction(Long.parseLong(xpp.getAttributeValue(null, XML_Ele.action.toString()), 16));
+                            } else if (headingName.equals(ctx.getString(R.string.object_size))) {
+                                menuItem.setAvAction(Integer.parseInt(xpp.getAttributeValue(null, XML_Ele.action.toString())));
+                            } else if (headingName.equals(ctx.getString(R.string.tools))) {
+                                menuItem.setAvAction(Integer.parseInt(xpp.getAttributeValue(null, XML_Ele.action.toString())));
+                            }
+
                             heading.add(menuItem);
                         }
                         break;
@@ -103,14 +111,13 @@ public class InvokeXML extends  MainActivity {
 
                     case XmlPullParser.END_TAG:
                         if(tagName.equals(XML_Ele.header.toString())){
-                            // Log.d("XML TEST", "End " + xpp.getName());
                             // Add this header object to object of header objects
                             // Header, Child data
                             listDataChild.put(listDataHeader.get(headings), heading);
                             headings++;
                         }
                         if(tagName.equals(XML_Ele.item.toString())){
-                            //Log.d("XML TEST", "" + xpp.getName());
+
                         }
                         break;
                     default:
@@ -122,18 +129,14 @@ public class InvokeXML extends  MainActivity {
         } catch (Exception e) {
             Log.e("XML ERROR", e.getMessage());
         }
-
-        //listDataChild.put(listDataHeader.get(2), heading);
-        return navMenu = new MenuModel(listDataHeader, listDataChild);
+        return new MenuModel(listDataHeader, listDataChild);
     }
 
     private static String getStringResourceByName(Context ctx, String aString, String resourceType) {
-        //String rPackageName = ctx.getResources().getResourcePackageName(R.string.brush);
         int resId = ctx.getResources().getIdentifier(aString, resourceType, ctx.getPackageName());
         return ctx.getString(resId);
     }
     private static int getIntResourceByName(Context ctx, String aString, String resourceType) {
-        //String rPackageName = ctx.getResources().getResourcePackageName(R.string.brush);
         int resId;
         return resId = ctx.getResources().getIdentifier(aString, resourceType, ctx.getPackageName());
     }

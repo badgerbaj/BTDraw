@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.ViewDragHelper;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -49,7 +50,40 @@ public class MainActivity extends AppCompatActivity
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                if (newState == DrawerLayout.STATE_SETTLING) {
+
+                    if(av.getMode() == 4) {
+                        for (ExpandedMenuModel m : listDataChild.get(listDataHeader.get(2))) {
+                            if( (int) m.getAvAction() == av.getPaintColor() ) {
+                                listDataHeader.get(2).setIconImg(m.getIconImg());
+                                invalidateOptionsMenu();
+                                mMenuAdapter.notifyDataSetInvalidated();
+                                break;
+                            }
+                        }
+                        //listDataHeader.get(2).set
+                    }
+
+                    //int test = av.getPaintColor();
+                    //int test2 = av.getMode();
+                    /*
+                    if (!isDrawerOpen()) {
+                        // starts opening
+                        getActionBar()
+                                .setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                    } else {
+                        // closing drawer
+                        getActionBar()
+                                .setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+                    }
+                    invalidateOptionsMenu();
+                    */
+                }
+            }
+        };
         drawer.setDrawerListener(toggle);
         setDrawerLeftEdgeSize(this, drawer);
         toggle.syncState();
@@ -80,50 +114,18 @@ public class MainActivity extends AppCompatActivity
                 parent.setItemChecked(index, true);
                 parent.collapseGroup(groupPosition);
 
-                //drawer.closeDrawers();
-
-                if (currentItem.equals(getString(R.string.brush))) {
-                    av.setMode(0);
-                } else if (currentItem.equals(getString(R.string.erase))) {
-                    av.Erase();
-                } else if (currentItem.equals(getString(R.string.object_small))) {
-                    av.setBrushSize(1);
-                } else if (currentItem.equals(getString(R.string.object_medium))) {
-                    av.setBrushSize(2);
-                } else if (currentItem.equals(getString(R.string.object_large))) {
-                    av.setBrushSize(3);
-                    // Handle the large brush action
-                } else if (currentItem.equals(getString(R.string.color_custom))) {
-                    // show color picker
-                } else if (currentItem.equals(getString(R.string.color_red))) {
-                    av.setPaintColor(Color.RED);
-                } else if (currentItem.equals(getString(R.string.color_orange))) {
-                    av.setPaintColor(0xFFFFA500);
-                } else if (currentItem.equals(getString(R.string.color_yellow))) {
-                    av.setPaintColor(Color.YELLOW);
-                } else if (currentItem.equals(getString(R.string.color_green))) {
-                    av.setPaintColor(Color.GREEN);
-                } else if (currentItem.equals(getString(R.string.color_blue))) {
-                    av.setPaintColor(Color.BLUE);
-                } else if (currentItem.equals(getString(R.string.color_purple))) {
-                    av.setPaintColor(0xFF551A8B);
-                } else if (currentItem.equals(getString(R.string.color_pink))) {
-                    av.setPaintColor(0xFFFF69B4);
-                } else if (currentItem.equals(getString(R.string.color_white))) {
-                    av.setPaintColor(Color.WHITE);
-                } else if (currentItem.equals(getString(R.string.color_grey))) {
-                    av.setPaintColor(Color.LTGRAY);
-                } else if (currentItem.equals(getString(R.string.color_black))) {
-                    av.setPaintColor(Color.BLACK);
-                } else if (currentItem.equals("Line")) {
-                    av.setMode(3);
-                } else if (currentItem.equals("Rectangle")) {
-                    av.setMode(1);
-                } else if (currentItem.equals("Oval")) {
-                    av.setMode(2);
-                } else if (currentItem.equals("Color Picker")) {
-                    av.setMode(4);
+                if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.tools))) {
+                    if (currentItem.equals(getString(R.string.erase))) {
+                        av.Erase();
+                    } else if (currentItem.equals(getString(R.string.color_picker))) {
+                        av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
+                    } else av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
+                } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.object_size))) {
+                    av.setBrushSize((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
+                } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.color))) {
+                    av.setPaintColor((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
                 }
+                //drawer.closeDrawers();
 
                 return false;
             }

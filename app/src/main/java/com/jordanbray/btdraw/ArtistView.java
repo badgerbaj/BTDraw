@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -35,6 +36,13 @@ public class ArtistView extends View {
     PointF lowerright = new PointF(0,0);
     UpdateTask ut;
 
+    public int getPaintColor() {
+        return paintColor;
+    }
+
+    public int getMode() {
+        return mode;
+    }
 
     public ArtistView(Context context) {
         super(context);
@@ -176,6 +184,7 @@ public class ArtistView extends View {
                     PaintParams pp = new PaintParams(pt, basecolor, height, width);
                     if (basecolor != paintColor) {
                         startPaint(pp);
+                        Toast.makeText(getContext(), "Filling... ", Toast.LENGTH_LONG).show();
                     }
                     break;
 
