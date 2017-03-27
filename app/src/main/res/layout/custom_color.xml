@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="380dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:padding="10dp"
+    android:weightSum="1"
+    >
 
     <TextView
-        android:text="TextView"
+        android:text="@string/color"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:id="@+id/color_textView" />
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
             android:text="Red: "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/color_textView"
             android:layout_alignParentStart="true"
             android:id="@+id/red_textView" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/color_textView"
             android:layout_alignRight="@+id/red_textView"
             android:id="@+id/red_textView_value"
@@ -40,7 +42,7 @@
 
     <SeekBar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/red_textView"
         android:layout_alignParentStart="true"
         android:id="@+id/red_seekBar"
@@ -48,21 +50,21 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
             android:text="Green: "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/red_seekBar"
             android:layout_alignParentStart="true"
             android:id="@+id/green_textView"
             android:layout_weight="1" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/red_seekBar"
             android:layout_alignRight="@+id/green_textView"
             android:id="@+id/green_textView_value"
@@ -74,7 +76,7 @@
 
     <SeekBar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/green_textView"
         android:layout_alignParentStart="true"
         android:id="@+id/green_seekBar"
@@ -82,20 +84,20 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
             android:text="Blue: "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/green_seekBar"
             android:id="@+id/blue_textView"
             android:layout_weight="1" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/green_seekBar"
             android:layout_alignRight="@+id/blue_textView"
             android:id="@+id/blue_textView_value"
@@ -107,7 +109,7 @@
 
     <SeekBar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/blue_textView"
         android:id="@+id/blue_seekBar" />
 

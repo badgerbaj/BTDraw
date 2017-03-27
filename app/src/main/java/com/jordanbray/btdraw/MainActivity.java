@@ -58,22 +58,33 @@ public class MainActivity extends AppCompatActivity
 
         av = (ArtistView)findViewById(R.id.drawing);
 
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerStateChanged(int newState) {
+                boolean found = false;
+                ExpandedMenuModel custom = new ExpandedMenuModel();
                 if (newState == DrawerLayout.STATE_SETTLING) {
                     if(av.getMode() == MODE_COLOR_PICKER) {
                         for (ExpandedMenuModel p : listDataHeader) {
                             if (p.getIconName().equals(getString(R.string.color))) {
                                 for (ExpandedMenuModel m : listDataChild.get(p)) {
+                                    if(m.getIconName().equals(getString(R.string.color_custom)))
+                                        custom = m;
                                     if( (int) m.getAvAction() == av.getPaintColor() ) {
                                         p.setIconImg(m.getIconImg());
                                         invalidateOptionsMenu();
                                         mMenuAdapter.notifyDataSetInvalidated();
+                                        found = true;
                                         break;
                                     }
+                                }
+                                if(!found) {
+                                    p.setIconImg(custom.getIconImg());
+                                    invalidateOptionsMenu();
+                                    mMenuAdapter.notifyDataSetInvalidated();
                                 }
                                 break;
                             }
@@ -127,6 +138,7 @@ public class MainActivity extends AppCompatActivity
                     av.setBrushSize((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.color))) {
                     if (currentItem.equals(getString(R.string.color_custom))) {
+                        //drawer.closeDrawer(GravityCompat.START);
                         int testing = showDialog();
 
                     }
@@ -177,12 +189,14 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        /*
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            // Not implemented
             return true;
         } else if (id == R.id.action_load) {
-
-        } else if (id == R.id.action_save) {
+            // Not implemented
+        } else */ if (id == R.id.action_save) {
             av.setDrawingCacheEnabled(true);
             String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(), av.getDrawingCache(), UUID.randomUUID().toString()+".png", "Custom Drawing");
             av.destroyDrawingCache();
