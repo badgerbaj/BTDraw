@@ -10,7 +10,9 @@
     <string name="save">Save</string>
     <string name="load">Load</string>
 
+    <!-- Heading -->
     <string name="tools">Tools</string>
+        <!-- Children -->
         <string name="brush">Brush</string>
         <string name="erase">Erase</string>
         <string name="color_picker">Color Picker</string>
@@ -21,12 +23,16 @@
         <string name="fill_oval">Oval Fill</string>
         <string name="paint_bucket">Paint Bucket</string>
 
+    <!-- Heading -->
     <string name="object_size">Object Size</string>
+        <!-- Children -->
         <string name="object_small">Small</string>
         <string name="object_medium">Medium</string>
         <string name="object_large">Large</string>
 
+    <!-- Heading -->
     <string name="color">Color</string>
+        <!-- Children -->
         <string name="color_red">Red</string>
         <string name="color_orange">Orange</string>
         <string name="color_yellow">Yellow</string>

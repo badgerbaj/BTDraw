@@ -20,13 +20,15 @@ import java.util.List;
  */
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
+
+    // Declare Variables
     private Context mContext;
     private List<ExpandedMenuModel> mListDataHeader; // header titles
-
     // child data in format of header title, child title
     private HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> mListDataChild;
     ExpandableListView expandList;
 
+    // Declare Constructor
     public ExpandableListAdapter(Context context, List<ExpandedMenuModel> listDataHeader, HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> listChildData, ExpandableListView mView) {
         this.mContext = context;
         this.mListDataHeader = listDataHeader;
@@ -34,10 +36,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this.expandList = mView;
     }
 
+    // Declare Getters
     @Override
     public int getGroupCount() {
-        int i = mListDataHeader.size();
-        //Log.d("GROUPCOUNT", String.valueOf(i));
         return this.mListDataHeader.size();
     }
 
@@ -58,8 +59,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        //Log.d("CHILD", mListDataChild.get(this.mListDataHeader.get(groupPosition))
-        //        .get(childPosition).toString());
         return this.mListDataChild.get(this.mListDataHeader.get(groupPosition))
                 .get(childPosition);
     }
@@ -72,11 +71,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public long getChildId(int groupPosition, int childPosition) {
         return childPosition;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return false;
     }
 
     @Override
@@ -118,8 +112,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    // Declare Booleans
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
     }
 }

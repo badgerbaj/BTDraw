@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity
     private HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> listDataChild;
     private MenuModel navMenu;
 
+    private final int MODE_COLOR_PICKER = 4;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,33 +64,23 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerStateChanged(int newState) {
                 if (newState == DrawerLayout.STATE_SETTLING) {
-
-                    if(av.getMode() == 4) {
-                        for (ExpandedMenuModel m : listDataChild.get(listDataHeader.get(2))) {
-                            if( (int) m.getAvAction() == av.getPaintColor() ) {
-                                listDataHeader.get(2).setIconImg(m.getIconImg());
-                                invalidateOptionsMenu();
-                                mMenuAdapter.notifyDataSetInvalidated();
+                    if(av.getMode() == MODE_COLOR_PICKER) {
+                        for (ExpandedMenuModel p : listDataHeader) {
+                            if (p.getIconName().equals(getString(R.string.color))) {
+                                for (ExpandedMenuModel m : listDataChild.get(p)) {
+                                    if( (int) m.getAvAction() == av.getPaintColor() ) {
+                                        p.setIconImg(m.getIconImg());
+                                        invalidateOptionsMenu();
+                                        mMenuAdapter.notifyDataSetInvalidated();
+                                        break;
+                                    }
+                                }
                                 break;
                             }
                         }
-                        //listDataHeader.get(2).set
-                    }
 
-                    //int test = av.getPaintColor();
-                    //int test2 = av.getMode();
-                    /*
-                    if (!isDrawerOpen()) {
-                        // starts opening
-                        getActionBar()
-                                .setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-                    } else {
-                        // closing drawer
-                        getActionBar()
-                                .setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
                     }
-                    invalidateOptionsMenu();
-                    */
                 }
             }
         };
@@ -112,21 +104,23 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
 
+                // Get the name of the current item
                 String currentItem = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconName();
 
                 // Set Selected item to header icon
                 listDataHeader.get(groupPosition).setIconImg(listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconImg());
-                //Toast.makeText(MainActivity.this, "clicked " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconName(), Toast.LENGTH_SHORT).show();
 
+                // Refresh the display
                 int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
                 parent.setItemChecked(index, true);
+                // Collapse heading
                 parent.collapseGroup(groupPosition);
 
+                // Determine the heading of the selected item, tell ArtistView what to do next
                 if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.tools))) {
                     if (currentItem.equals(getString(R.string.erase))) {
+                        av.setMode(0);
                         av.Erase();
-                    } else if (currentItem.equals(getString(R.string.color_picker))) {
-                        av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
                     } else av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
                     Log.i("POSITION",Integer.toString((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction()));
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.object_size))) {
@@ -134,7 +128,6 @@ public class MainActivity extends AppCompatActivity
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.color))) {
                     av.setPaintColor((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
                 }
-                //drawer.closeDrawers();
 
                 return false;
             }
@@ -142,14 +135,14 @@ public class MainActivity extends AppCompatActivity
         expandableList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View view, int groupPosition, long id) {
-                //Log.d("DEBUG", "heading clicked: " + i);
+
                 return false;
             }
         });
     }
 
     private void prepareListData() {
-
+        // Build the entries in the drawer menu
         navMenu = InvokeXML.readMenuItemsXML(getApplicationContext());
         listDataHeader = navMenu.getListDataHeader();
         listDataChild = navMenu.getListDataChild();
@@ -157,6 +150,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        // If the drawer is open on back pressed, close it
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
