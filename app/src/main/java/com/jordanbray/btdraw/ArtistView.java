@@ -337,7 +337,7 @@ public class ArtistView extends View {
 
 
     public void newCanvas () {
-        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        canvas.drawColor(Color.WHITE);
         invalidate();
     }
 
