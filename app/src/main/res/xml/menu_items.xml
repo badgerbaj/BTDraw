@@ -27,7 +27,7 @@
         <item value="@string/color_red" image="@drawable/ic_color_red" action="FFFF0000"/>
         <item value="@string/color_orange" image="@drawable/ic_color_orange" action="FFFFA500"/>
         <item value="@string/color_yellow" image="@drawable/ic_color_yellow" action="FFFFFF00"/>
-        <item value="@string/color_green" image="@drawable/ic_color_green" action="FF00CC00"/>
+        <item value="@string/color_green" image="@drawable/ic_color_green" action="FF00FF00"/>
         <item value="@string/color_blue" image="@drawable/ic_color_blue" action="FF0000FF"/>
         <item value="@string/color_purple" image="@drawable/ic_color_purple" action="FF551A8B"/>
         <item value="@string/color_pink" image="@drawable/ic_color_pink" action="FFFF69B4"/>
