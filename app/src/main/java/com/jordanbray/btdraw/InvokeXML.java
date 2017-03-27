@@ -56,8 +56,6 @@ public class InvokeXML extends  MainActivity {
         int headings = 0;
         listDataHeader = new ArrayList<ExpandedMenuModel>();
         listDataChild = new HashMap<ExpandedMenuModel, List<ExpandedMenuModel>>();
-        MenuModel navMenu;
-
         List<ExpandedMenuModel> heading = new ArrayList<ExpandedMenuModel>();
 
         try {
@@ -70,11 +68,6 @@ public class InvokeXML extends  MainActivity {
                 switch (eventType){
                     case XmlPullParser.START_TAG:
                         if(tagName.equals(XML_Ele.header.toString())){
-                            //Log.d("XML TEST", "" + xpp.getName());
-                            //Log.d("XML TEST", "" +
-                            //       getStringResourceByName(ctx, xpp.getAttributeValue(0)));
-                            //Log.d("XML TEST", "" +
-                            //        getResourceByName(ctx, xpp.getAttributeValue(1), XML_Ele.drawable.toString()));
                             // Create new header object
                             // Adding data header
                             ExpandedMenuModel item = new ExpandedMenuModel();
@@ -85,11 +78,8 @@ public class InvokeXML extends  MainActivity {
                             listDataHeader.add(item);
                         }
                         if(tagName.equals(XML_Ele.item.toString())){
-                            //Log.d("XML TEST", "" + xpp.getName());
-                            //Log.d("XML TEST", "" + xpp.getAttributeValue(0));
                             // Create new item header object, add to header object
                             // Adding child data
-
                             ExpandedMenuModel menuItem = new ExpandedMenuModel();
                             menuItem.setIconName(getStringResourceByName(ctx, xpp.getAttributeValue(0), XML_Ele.string.toString()));
                             menuItem.setIconImg(getIntResourceByName(ctx, xpp.getAttributeValue(1), XML_Ele.drawable.toString()));
@@ -103,14 +93,13 @@ public class InvokeXML extends  MainActivity {
 
                     case XmlPullParser.END_TAG:
                         if(tagName.equals(XML_Ele.header.toString())){
-                            // Log.d("XML TEST", "End " + xpp.getName());
                             // Add this header object to object of header objects
                             // Header, Child data
                             listDataChild.put(listDataHeader.get(headings), heading);
                             headings++;
                         }
                         if(tagName.equals(XML_Ele.item.toString())){
-                            //Log.d("XML TEST", "" + xpp.getName());
+
                         }
                         break;
                     default:
@@ -123,17 +112,14 @@ public class InvokeXML extends  MainActivity {
             Log.e("XML ERROR", e.getMessage());
         }
 
-        //listDataChild.put(listDataHeader.get(2), heading);
-        return navMenu = new MenuModel(listDataHeader, listDataChild);
+        return new MenuModel(listDataHeader, listDataChild);
     }
 
     private static String getStringResourceByName(Context ctx, String aString, String resourceType) {
-        //String rPackageName = ctx.getResources().getResourcePackageName(R.string.brush);
         int resId = ctx.getResources().getIdentifier(aString, resourceType, ctx.getPackageName());
         return ctx.getString(resId);
     }
     private static int getIntResourceByName(Context ctx, String aString, String resourceType) {
-        //String rPackageName = ctx.getResources().getResourcePackageName(R.string.brush);
         int resId;
         return resId = ctx.getResources().getIdentifier(aString, resourceType, ctx.getPackageName());
     }
