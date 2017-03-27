@@ -8,6 +8,7 @@ public class ExpandedMenuModel {
 
     private String iconName = "";
     private int iconImg = -1; // menu icon resource id
+    private long avAction = -1;
 
     public String getIconName() {
         return iconName;
@@ -20,5 +21,11 @@ public class ExpandedMenuModel {
     }
     public void setIconImg(int iconImg) {
         this.iconImg = iconImg;
+    }
+    public long getAvAction() {
+        return avAction;
+    }
+    public void setAvAction(long avAction) {
+        this.avAction = avAction;
     }
 }

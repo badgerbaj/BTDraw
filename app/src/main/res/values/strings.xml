@@ -16,7 +16,10 @@
         <string name="color_picker">Color Picker</string>
         <string name="line">Line</string>
         <string name="rectangle">Rectangle</string>
+        <string name="fill_rectangle">Rectangle Fill</string>
         <string name="oval">Oval</string>
+        <string name="fill_oval">Oval Fill</string>
+        <string name="paint_bucket">Paint Bucket</string>
 
     <string name="object_size">Object Size</string>
         <string name="object_small">Small</string>

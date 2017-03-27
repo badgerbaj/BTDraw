@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/menu_items">
-    <header value="@string/tools" image="@drawable/ic_paint_fill">
-        <item value="@string/brush" image="@drawable/ic_paint_fill" />
-        <item value="@string/erase" image="@drawable/ic_erase" />
-        <item value="@string/color_picker" image="@drawable/ic_color_picker" />
-        <item value="@string/line" image="@drawable/ic_line" />
-        <item value="@string/rectangle" image="@drawable/ic_rectangle" />
-        <item value="@string/oval" image="@drawable/ic_oval" />
+    <header value="@string/tools" image="@drawable/ic_brush" action="0">
+        <item value="@string/brush" image="@drawable/ic_brush" action="0"/>
+        <item value="@string/paint_bucket" image="@drawable/ic_paint_fill" action="5"/>
+        <item value="@string/erase" image="@drawable/ic_erase" action="100"/>
+        <item value="@string/color_picker" image="@drawable/ic_color_picker" action="4"/>
+        <item value="@string/line" image="@drawable/ic_line" action="3"/>
+        <item value="@string/rectangle" image="@drawable/ic_rectangle" action="1"/>
+        <item value="@string/fill_rectangle" image="@drawable/ic_fill_rectangle" action="6"/>
+        <item value="@string/oval" image="@drawable/ic_oval" action="2"/>
+        <item value="@string/fill_oval" image="@drawable/ic_fill_oval" action="7"/>
     </header>
-    <header value="@string/object_size" image="@drawable/ic_object_medium">
-        <item value="@string/object_small" image="@drawable/ic_object_small" />
-        <item value="@string/object_medium" image="@drawable/ic_object_medium" />
-        <item value="@string/object_large" image="@drawable/ic_object_large" />
+    <header value="@string/object_size" image="@drawable/ic_object_small" action="1">
+        <item value="@string/object_small" image="@drawable/ic_object_small" action="1"/>
+        <item value="@string/object_medium" image="@drawable/ic_object_medium" action="2"/>
+        <item value="@string/object_large" image="@drawable/ic_object_large" action="3"/>
     </header>
-    <header value="@string/color" image="@drawable/ic_color_black">
-        <item value="@string/color_custom" image="@drawable/ic_color_picker" />
-        <item value="@string/color_red" image="@drawable/ic_color_red" />
-        <item value="@string/color_orange" image="@drawable/ic_color_orange" />
-        <item value="@string/color_yellow" image="@drawable/ic_color_yellow" />
-        <item value="@string/color_green" image="@drawable/ic_color_green" />
-        <item value="@string/color_blue" image="@drawable/ic_color_blue" />
-        <item value="@string/color_purple" image="@drawable/ic_color_purple" />
-        <item value="@string/color_pink" image="@drawable/ic_color_pink" />
-        <item value="@string/color_white" image="@drawable/ic_color_white" />
-        <item value="@string/color_grey" image="@drawable/ic_color_grey" />
-        <item value="@string/color_black" image="@drawable/ic_color_black" />
+    <header value="@string/color" image="@drawable/ic_color_black" action="FF000000">
+        <item value="@string/color_red" image="@drawable/ic_color_red" action="FFFF0000"/>
+        <item value="@string/color_orange" image="@drawable/ic_color_orange" action="FFFFA500"/>
+        <item value="@string/color_yellow" image="@drawable/ic_color_yellow" action="FFFFFF00"/>
+        <item value="@string/color_green" image="@drawable/ic_color_green" action="FF00CC00"/>
+        <item value="@string/color_blue" image="@drawable/ic_color_blue" action="FF0000FF"/>
+        <item value="@string/color_purple" image="@drawable/ic_color_purple" action="FF551A8B"/>
+        <item value="@string/color_pink" image="@drawable/ic_color_pink" action="FFFF69B4"/>
+        <item value="@string/color_white" image="@drawable/ic_color_white" action="FFFFFFFF"/>
+        <item value="@string/color_grey" image="@drawable/ic_color_grey" action="FFBFBFBF"/>
+        <item value="@string/color_black" image="@drawable/ic_color_black" action="FF000000"/>
     </header>
 </menu>
