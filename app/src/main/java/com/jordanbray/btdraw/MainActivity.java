@@ -122,11 +122,15 @@ public class MainActivity extends AppCompatActivity
                         av.setMode(0);
                         av.Erase();
                     } else av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
-                    Log.i("POSITION",Integer.toString((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction()));
+                    //Log.i("POSITION",Integer.toString((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction()));
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.object_size))) {
                     av.setBrushSize((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.color))) {
-                    av.setPaintColor((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
+                    if (currentItem.equals(getString(R.string.color_custom))) {
+                        int testing = showDialog();
+
+                    }
+                    else av.setPaintColor((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
                 }
 
                 return false;
@@ -226,7 +230,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public int showDialog() {
-        int colorValue = 0;
+
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.custom_color);
         dialog.setTitle("SELECT CUSTOM COLOR");
@@ -245,6 +249,7 @@ public class MainActivity extends AppCompatActivity
         ok_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                av.setPaintColor(Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString())));
                 dialog.dismiss();
             }
         });
@@ -302,6 +307,7 @@ public class MainActivity extends AppCompatActivity
 
 
         dialog.show();
-        return colorValue;
+
+        return Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString()));
     }
 }
