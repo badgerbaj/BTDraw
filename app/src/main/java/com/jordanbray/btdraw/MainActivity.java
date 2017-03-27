@@ -64,23 +64,8 @@ public class MainActivity extends AppCompatActivity
                                 break;
                             }
                         }
-                        //listDataHeader.get(2).set
-                    }
 
-                    //int test = av.getPaintColor();
-                    //int test2 = av.getMode();
-                    /*
-                    if (!isDrawerOpen()) {
-                        // starts opening
-                        getActionBar()
-                                .setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-                    } else {
-                        // closing drawer
-                        getActionBar()
-                                .setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
                     }
-                    invalidateOptionsMenu();
-                    */
                 }
             }
         };
@@ -116,6 +101,7 @@ public class MainActivity extends AppCompatActivity
 
                 if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.tools))) {
                     if (currentItem.equals(getString(R.string.erase))) {
+                        av.setMode(0);
                         av.Erase();
                     } else if (currentItem.equals(getString(R.string.color_picker))) {
                         av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
