@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.ViewDragHelper;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -49,7 +50,40 @@ public class MainActivity extends AppCompatActivity
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                if (newState == DrawerLayout.STATE_SETTLING) {
+
+                    if(av.getMode() == 4) {
+                        for (ExpandedMenuModel m : listDataChild.get(listDataHeader.get(2))) {
+                            if( (int) m.getAvAction() == av.getPaintColor() ) {
+                                listDataHeader.get(2).setIconImg(m.getIconImg());
+                                invalidateOptionsMenu();
+                                mMenuAdapter.notifyDataSetInvalidated();
+                                break;
+                            }
+                        }
+                        //listDataHeader.get(2).set
+                    }
+
+                    //int test = av.getPaintColor();
+                    //int test2 = av.getMode();
+                    /*
+                    if (!isDrawerOpen()) {
+                        // starts opening
+                        getActionBar()
+                                .setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                    } else {
+                        // closing drawer
+                        getActionBar()
+                                .setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+                    }
+                    invalidateOptionsMenu();
+                    */
+                }
+            }
+        };
         drawer.setDrawerListener(toggle);
         setDrawerLeftEdgeSize(this, drawer);
         toggle.syncState();

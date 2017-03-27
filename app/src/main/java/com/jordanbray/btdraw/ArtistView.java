@@ -40,6 +40,10 @@ public class ArtistView extends View {
         return paintColor;
     }
 
+    public int getMode() {
+        return mode;
+    }
+
     public ArtistView(Context context) {
         super(context);
         setupDrawing();
