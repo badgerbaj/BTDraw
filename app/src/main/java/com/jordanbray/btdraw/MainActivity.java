@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity
     private HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> listDataChild;
     private MenuModel navMenu;
 
+    private final int MODE_COLOR_PICKER = 4;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,16 +56,21 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerStateChanged(int newState) {
                 if (newState == DrawerLayout.STATE_SETTLING) {
-
-                    if(av.getMode() == 4) {
-                        for (ExpandedMenuModel m : listDataChild.get(listDataHeader.get(2))) {
-                            if( (int) m.getAvAction() == av.getPaintColor() ) {
-                                listDataHeader.get(2).setIconImg(m.getIconImg());
-                                invalidateOptionsMenu();
-                                mMenuAdapter.notifyDataSetInvalidated();
+                    if(av.getMode() == MODE_COLOR_PICKER) {
+                        for (ExpandedMenuModel p : listDataHeader) {
+                            if (p.getIconName().equals(getString(R.string.color))) {
+                                for (ExpandedMenuModel m : listDataChild.get(p)) {
+                                    if( (int) m.getAvAction() == av.getPaintColor() ) {
+                                        p.setIconImg(m.getIconImg());
+                                        invalidateOptionsMenu();
+                                        mMenuAdapter.notifyDataSetInvalidated();
+                                        break;
+                                    }
+                                }
                                 break;
                             }
                         }
+
 
                     }
                 }
