@@ -197,6 +197,7 @@ public class ArtistView extends View {
         mode = i;
     }
 
+
     public void startPaint (PaintParams pp) {
         if (ut != null && ut.getStatus() == AsyncTask.Status.FINISHED){
             ut = null;
