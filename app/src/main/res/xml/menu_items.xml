@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/menu_items">
-    <header value="@string/tools" image="@drawable/ic_paint_fill">
-        <item value="@string/brush" image="@drawable/ic_paint_fill" />
+    <header value="@string/tools" image="@drawable/ic_brush">
+        <item value="@string/brush" image="@drawable/ic_brush" />
         <item value="@string/paint_bucket" image="@drawable/ic_paint_fill" />
         <item value="@string/erase" image="@drawable/ic_erase" />
         <item value="@string/color_picker" image="@drawable/ic_color_picker" />
