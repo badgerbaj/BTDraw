@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.ViewDragHelper;
@@ -27,6 +28,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -114,6 +116,7 @@ public class MainActivity extends AppCompatActivity
                         av.setMode(0);
                         av.Erase();
                     } else av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
+                    Log.i("POSITION",Integer.toString((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction()));
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.object_size))) {
                     av.setBrushSize((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.color))) {
@@ -170,9 +173,11 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.action_load) {
 
         } else if (id == R.id.action_save) {
-
-        } else if (id == R.id.action_start_new) {
-
+            av.setDrawingCacheEnabled(true);
+            String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(), av.getDrawingCache(), UUID.randomUUID().toString()+".png", "Custom Drawing");
+            av.destroyDrawingCache();
+         } else if (id == R.id.action_start_new) {
+            av.newCanvas();
         }
 
         return super.onOptionsItemSelected(item);

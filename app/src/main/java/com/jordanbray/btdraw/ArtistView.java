@@ -8,8 +8,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,12 +20,14 @@ import android.widget.Toast;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.UUID;
 
 /**
  * Created by bjordan on 3/21/2017.
  */
 
 public class ArtistView extends View {
+
 
     private int mode = 0;
     private Path path;
@@ -113,17 +117,18 @@ public class ArtistView extends View {
                     canvas.drawPoint(x, y, paint);
                     path.moveTo(x, y);
                     break;
-
                 case 1:
                 case 2:
                 case 3:
+                case 4:
+                case 5:
                     upperleft.x = x;
                     upperleft.y = y;
                     lowerright.x = x;
                     lowerright.y = y;
                     break;
-                case 4:
-                case 5:
+                case 6:
+                case 7:
                     upperleft.x = x;
                     upperleft.y = y;
                 default:
@@ -139,6 +144,8 @@ public class ArtistView extends View {
                 case 1:
                 case 2:
                 case 3:
+                case 4:
+                case 5:
                     lowerright.x = x;
                     lowerright.y = y;
                     break;
@@ -157,22 +164,29 @@ public class ArtistView extends View {
                     canvas.drawRect(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
                     invalidate();
                     break;
-
                 case 2:
+                    canvas.drawRect(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
+                    invalidate();
+                    break;
+                case 3:
                     RectF rec = new RectF(upperleft.x,  upperleft.y, lowerright.x, lowerright.y);
                     canvas.drawOval(rec, paint);
                     invalidate();
                     break;
-                case 3:
-                    canvas.drawLine(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
-                    invalidate();
-                    break;
                 case 4:
-                    ColorPicker(upperleft.x,  upperleft.y);
+                    rec = new RectF(upperleft.x,  upperleft.y, lowerright.x, lowerright.y);
+                    canvas.drawOval(rec, paint);
                     invalidate();
                     break;
                 case 5:
-
+                    canvas.drawLine(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
+                    invalidate();
+                    break;
+                case 6:
+                    ColorPicker(upperleft.x,  upperleft.y);
+                    invalidate();
+                    break;
+                case 7:
                     int pixel = canvasBitmap.getPixel(Math.round(x), Math.round(y));
                     int red = Color.red(pixel);
                     int green = Color.green(pixel);
@@ -204,7 +218,36 @@ public class ArtistView extends View {
 
     public void setMode (int i) {
         mode = i;
+        switch (i) {
+            case 0:
+                paint.setStyle(Paint.Style.STROKE);
+                break;
+            case 1:
+                paint.setStyle(Paint.Style.STROKE);
+                break;
+            case 2:
+                paint.setStyle(Paint.Style.FILL_AND_STROKE);
+                break;
+            case 3:
+                paint.setStyle(Paint.Style.STROKE);
+                break;
+            case 4:
+                paint.setStyle(Paint.Style.FILL_AND_STROKE);
+                break;
+            case 5:
+                paint.setStyle(Paint.Style.STROKE);
+                break;
+            case 6:
+                paint.setStyle(Paint.Style.STROKE);
+                break;
+            case 7:
+                paint.setStyle(Paint.Style.STROKE);
+                break;
+            default:
+                break;
+        }
     }
+
 
     public void startPaint (PaintParams pp) {
         if (ut != null && ut.getStatus() == AsyncTask.Status.FINISHED){
@@ -293,9 +336,10 @@ public class ArtistView extends View {
     }
 
 
-
-
-
+    public void newCanvas () {
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        invalidate();
+    }
 
 
     public void setBrushSize (int i) {
