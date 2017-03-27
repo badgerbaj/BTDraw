@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
     private HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> listDataChild;
     private MenuModel navMenu;
 
-    private final int MODE_COLOR_PICKER = 4;
+    private final int MODE_COLOR_PICKER = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

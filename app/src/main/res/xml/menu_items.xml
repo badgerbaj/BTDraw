@@ -24,7 +24,7 @@
         <item value="@string/object_large" image="@drawable/ic_object_large" action="3"/>
     </header>
     <header value="@string/color" image="@drawable/ic_color_black" action="FF000000">
-        <item value="@string/color_custom" image="@drawable/ic_color_red" action="FFFF0000"/>
+        <item value="@string/color_custom" image="@drawable/ic_color_custom" action="FF000001"/>
         <item value="@string/color_red" image="@drawable/ic_color_red" action="FFFF0000"/>
         <item value="@string/color_orange" image="@drawable/ic_color_orange" action="FFFFA500"/>
         <item value="@string/color_yellow" image="@drawable/ic_color_yellow" action="FFFFFF00"/>
