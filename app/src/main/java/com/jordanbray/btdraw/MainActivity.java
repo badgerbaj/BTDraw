@@ -80,50 +80,18 @@ public class MainActivity extends AppCompatActivity
                 parent.setItemChecked(index, true);
                 parent.collapseGroup(groupPosition);
 
-                //drawer.closeDrawers();
-
-                if (currentItem.equals(getString(R.string.brush))) {
-                    av.setMode(0);
-                } else if (currentItem.equals(getString(R.string.erase))) {
-                    av.Erase();
-                } else if (currentItem.equals(getString(R.string.object_small))) {
-                    av.setBrushSize(1);
-                } else if (currentItem.equals(getString(R.string.object_medium))) {
-                    av.setBrushSize(2);
-                } else if (currentItem.equals(getString(R.string.object_large))) {
-                    av.setBrushSize(3);
-                    // Handle the large brush action
-                } else if (currentItem.equals(getString(R.string.color_red))) {
-                    av.setPaintColor(Color.RED);
-                } else if (currentItem.equals(getString(R.string.color_orange))) {
-                    av.setPaintColor(0xFFFFA500);
-                } else if (currentItem.equals(getString(R.string.color_yellow))) {
-                    av.setPaintColor(Color.YELLOW);
-                } else if (currentItem.equals(getString(R.string.color_green))) {
-                    av.setPaintColor(Color.GREEN);
-                } else if (currentItem.equals(getString(R.string.color_blue))) {
-                    av.setPaintColor(Color.BLUE);
-                } else if (currentItem.equals(getString(R.string.color_purple))) {
-                    av.setPaintColor(0xFF551A8B);
-                } else if (currentItem.equals(getString(R.string.color_pink))) {
-                    av.setPaintColor(0xFFFF69B4);
-                } else if (currentItem.equals(getString(R.string.color_white))) {
-                    av.setPaintColor(Color.WHITE);
-                } else if (currentItem.equals(getString(R.string.color_grey))) {
-                    av.setPaintColor(Color.LTGRAY);
-                } else if (currentItem.equals(getString(R.string.color_black))) {
-                    av.setPaintColor(Color.BLACK);
-                } else if (currentItem.equals(getString(R.string.line))) {
-                    av.setMode(3);
-                } else if (currentItem.equals(getString(R.string.rectangle))) {
-                    av.setMode(1);
-                } else if (currentItem.equals(getString(R.string.oval))) {
-                    av.setMode(2);
-                } else if (currentItem.equals(getString(R.string.color_picker))) {
-                    av.setMode(4);
-                } else if (currentItem.equals(getString(R.string.paint_bucket))) {
-                    av.setMode(5);
+                if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.tools))) {
+                    if (currentItem.equals(getString(R.string.erase))) {
+                        av.Erase();
+                    } else if (currentItem.equals(getString(R.string.color_picker))) {
+                        av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
+                    } else av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
+                } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.object_size))) {
+                    av.setBrushSize((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
+                } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.color))) {
+                    av.setPaintColor((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
                 }
+                //drawer.closeDrawers();
 
                 return false;
             }

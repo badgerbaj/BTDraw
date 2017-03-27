@@ -36,6 +36,9 @@ public class ArtistView extends View {
     PointF lowerright = new PointF(0,0);
     UpdateTask ut;
 
+    public int getPaintColor() {
+        return paintColor;
+    }
 
     public ArtistView(Context context) {
         super(context);
