@@ -3,14 +3,14 @@
     android:id="@+id/menu_items">
     <header value="@string/tools" image="@drawable/ic_brush" action="0">
         <item value="@string/brush" image="@drawable/ic_brush" action="0"/>
-        <item value="@string/paint_bucket" image="@drawable/ic_paint_fill" action="5"/>
+        <item value="@string/paint_bucket" image="@drawable/ic_paint_fill" action="7"/>
         <item value="@string/erase" image="@drawable/ic_erase" action="100"/>
-        <item value="@string/color_picker" image="@drawable/ic_color_picker" action="4"/>
-        <item value="@string/line" image="@drawable/ic_line" action="3"/>
+        <item value="@string/color_picker" image="@drawable/ic_color_picker" action="6"/>
+        <item value="@string/line" image="@drawable/ic_line" action="5"/>
         <item value="@string/rectangle" image="@drawable/ic_rectangle" action="1"/>
-        <item value="@string/fill_rectangle" image="@drawable/ic_fill_rectangle" action="6"/>
-        <item value="@string/oval" image="@drawable/ic_oval" action="2"/>
-        <item value="@string/fill_oval" image="@drawable/ic_fill_oval" action="7"/>
+        <item value="@string/fill_rectangle" image="@drawable/ic_fill_rectangle" action="2"/>
+        <item value="@string/oval" image="@drawable/ic_oval" action="3"/>
+        <item value="@string/fill_oval" image="@drawable/ic_fill_oval" action="4"/>
     </header>
     <header value="@string/object_size" image="@drawable/ic_object_small" action="1">
         <item value="@string/object_small" image="@drawable/ic_object_small" action="1"/>
