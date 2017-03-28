@@ -35,8 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     final Context context = this;
     private ArtistView av;
@@ -88,8 +87,6 @@ public class MainActivity extends AppCompatActivity
                                 break;
                             }
                         }
-
-
                     }
                 }
             }
@@ -100,9 +97,6 @@ public class MainActivity extends AppCompatActivity
 
         expandableList = (ExpandableListView) findViewById(R.id.navigationmenu);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        //navigationView.setItemIconTintList(null);
 
         prepareListData();
         mMenuAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild, expandableList);
@@ -117,9 +111,12 @@ public class MainActivity extends AppCompatActivity
                 // Get the name of the current item
                 String currentItem = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconName();
 
-                // Set Selected item to header icon
-                listDataHeader.get(groupPosition).setIconImg(listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconImg());
 
+                // Set Selected item to header icon
+                if(!listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.options))) {
+                    listDataHeader.get(groupPosition).setIconImg(listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconImg());
+                }
+                
                 // Refresh the display
                 int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
                 parent.setItemChecked(index, true);
@@ -127,12 +124,22 @@ public class MainActivity extends AppCompatActivity
                 parent.collapseGroup(groupPosition);
 
                 // Determine the heading of the selected item, tell ArtistView what to do next
-                if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.tools))) {
+                if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.options))) {
+                    if (currentItem.equals(getString(R.string.start_new))) {
+                        av.newCanvas();
+                    } else if (currentItem.equals(getString(R.string.save))) {
+                        av.setDrawingCacheEnabled(true);
+                        String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(), av.getDrawingCache(), UUID.randomUUID().toString()+".png", "Custom Drawing");
+                        av.destroyDrawingCache();
+                    } else if (currentItem.equals(getString(R.string.undo))) {
+                        av.sendBitmapToCanvas();
+                    }
+                    drawer.closeDrawer(GravityCompat.START);
+                } else if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.tools))) {
                     if (currentItem.equals(getString(R.string.erase))) {
                         av.setMode(0);
                         av.Erase();
                     } else av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
-                    //Log.i("POSITION",Integer.toString((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction()));
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.object_size))) {
                     av.setBrushSize((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.color))) {
@@ -172,49 +179,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        /*
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            // Not implemented
-            return true;
-        } else if (id == R.id.action_load) {
-            // Not implemented
-        } else */ if (id == R.id.action_save) {
-            av.setDrawingCacheEnabled(true);
-            String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(), av.getDrawingCache(), UUID.randomUUID().toString()+".png", "Custom Drawing");
-            av.destroyDrawingCache();
-         } else if (id == R.id.action_start_new) {
-            av.newCanvas();
-        } else if (id == R.id.action_undo) {
-            av.sendBitmapToCanvas();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here
-        // NOTE: This method is no longer used
-
-        return true;
     }
 
     // Prevent the Navigation Drawer from sliding out while drawing

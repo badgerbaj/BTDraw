@@ -7,6 +7,11 @@
         image: add images to drawables
         action: must be a number
     -->
+    <header value="@string/options" image="@drawable/ic_options" action="0">
+        <item value="@string/start_new" image="@drawable/ic_start_new" action="0"/>
+        <item value="@string/save" image="@drawable/ic_save" action="1"/>
+        <item value="@string/undo" image="@drawable/ic_undo" action="2"/>
+    </header>
     <header value="@string/tools" image="@drawable/ic_brush" action="0">
         <item value="@string/brush" image="@drawable/ic_brush" action="0"/>
         <item value="@string/paint_bucket" image="@drawable/ic_paint_fill" action="7"/>

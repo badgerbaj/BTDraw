@@ -92,8 +92,8 @@ public class ArtistView extends View {
 
     @Override
     protected void onDraw(Canvas c) {
-            c.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
-            c.drawPath(path, paint);
+        c.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
+        c.drawPath(path, paint);
     }
 
     @Override
@@ -115,6 +115,7 @@ public class ArtistView extends View {
         // action when the screen is pressed depending on drawing mode
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             saveToBitmap();
+
             switch (mode) {
                 case 0:
                     canvas.drawPoint(x, y, paint);
@@ -372,10 +373,11 @@ public class ArtistView extends View {
     }
     // Called by Undo
     public void sendBitmapToCanvas () {
-        if(isDrawingCacheEnabled() && !currentCanvas.isRecycled()) {
-            canvas.drawBitmap(currentCanvas, getMatrix(), canvasPaint);
-            path.reset();
-            destroyDrawingCache();
+
+        if(isDrawingCacheEnabled() && currentCanvas != null) {
+            if (!currentCanvas.isRecycled()) {
+                canvas.drawBitmap(currentCanvas, getMatrix(), canvasPaint);
+            }
         }
     }
 }
