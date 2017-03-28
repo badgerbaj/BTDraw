@@ -32,7 +32,7 @@ public class ArtistView extends View {
     private int paintColor = 0xFF000000;
     private int canvasColor = 0xFFFFFFFF;
     private Canvas canvas;
-    private Bitmap canvasBitmap;
+    private Bitmap canvasBitmap, currentCanvas;
     PointF upperLeft = new PointF(0,0);
     PointF lowerRight = new PointF(0,0);
     UpdateTask ut;
@@ -85,8 +85,6 @@ public class ArtistView extends View {
         canvas = new Canvas(canvasBitmap);
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.btdraw_intro);
-        //Canvas logoCanvas = new Canvas(bitmap);
-
         canvas.drawBitmap(bitmap.copy(Bitmap.Config.ARGB_8888, true), getMatrix(), canvasPaint);
 
         //canvas.drawColor(canvasColor);
@@ -110,11 +108,13 @@ public class ArtistView extends View {
         // 6 - Color Picker
         // 7 - Bucket Fill
 
+
         float x = event.getX();
         float y = event.getY();
 
         // action when the screen is pressed depending on drawing mode
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            saveToBitmap();
             switch (mode) {
                 case 0:
                     canvas.drawPoint(x, y, paint);
@@ -360,5 +360,16 @@ public class ArtistView extends View {
         invalidate();
         paintColor = canvasColor;
         paint.setColor(paintColor);
+    }
+
+    public void saveToBitmap() {
+        setDrawingCacheEnabled(true);
+
+        currentCanvas = getDrawingCache();
+
+        //destroyDrawingCache();
+    }
+    public void sendBitmapToCanvas () {
+        canvas.drawBitmap(currentCanvas, getMatrix(), canvasPaint);
     }
 }

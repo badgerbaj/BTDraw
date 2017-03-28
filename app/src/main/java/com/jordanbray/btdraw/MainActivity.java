@@ -201,6 +201,8 @@ public class MainActivity extends AppCompatActivity
             av.destroyDrawingCache();
          } else if (id == R.id.action_start_new) {
             av.newCanvas();
+        } else if (id == R.id.action_undo) {
+            av.sendBitmapToCanvas();
         }
 
         return super.onOptionsItemSelected(item);

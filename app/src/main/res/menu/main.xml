@@ -5,6 +5,8 @@
         android:id="@+id/action_start_new"/>
     <item android:title="@string/save"
         android:id="@+id/action_save"/>
+    <item android:title="@string/undo"
+        android:id="@+id/action_undo"/>
     <!-- Future features to implement
     <item android:title="@string/load"
         android:id="@+id/action_load"/>
