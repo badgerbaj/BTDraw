@@ -18,8 +18,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
                 android:id="@+id/color_textView"
                 android:textSize="24sp"
                 android:paddingBottom="10dp"
@@ -37,18 +35,13 @@
                 android:text="Red: "
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/color_textView"
-                android:layout_alignParentStart="true"
                 android:id="@+id/red_textView" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/color_textView"
-                android:layout_alignRight="@+id/red_textView"
                 android:id="@+id/red_textView_value"
                 android:text="0"
-                android:layout_alignStart="@+id/blue_textView_value"
                 android:layout_weight="1" />
 
         </TableRow>
@@ -60,8 +53,6 @@
             <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/red_textView"
-                android:layout_alignParentStart="true"
                 android:id="@+id/red_seekBar"
                 android:layout_weight="1" />
         </TableRow>
@@ -74,18 +65,13 @@
                 android:text="Green: "
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/red_seekBar"
-                android:layout_alignParentStart="true"
                 android:id="@+id/green_textView" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/red_seekBar"
-                android:layout_alignRight="@+id/green_textView"
                 android:id="@+id/green_textView_value"
-                android:text="0"
-                android:layout_toEndOf="@+id/button" />
+                android:text="0" />
 
         </TableRow>
 
@@ -96,8 +82,6 @@
             <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/green_textView"
-                android:layout_alignParentStart="true"
                 android:id="@+id/green_seekBar"
                 android:layout_weight="1" />
         </TableRow>
@@ -110,17 +94,13 @@
                 android:text="Blue: "
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/green_seekBar"
                 android:id="@+id/blue_textView" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/green_seekBar"
-                android:layout_alignRight="@+id/blue_textView"
-                android:id="@+id/blue_textView_value"
-                android:text="0"
-                android:layout_toEndOf="@+id/red_textView" />
+                 android:id="@+id/blue_textView_value"
+                android:text="0" />
 
         </TableRow>
 
