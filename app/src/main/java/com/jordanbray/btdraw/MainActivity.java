@@ -230,6 +230,8 @@ public class MainActivity extends AppCompatActivity
                 }
             });
             newConfirm.show();
+        } else if (id == R.id.action_undo) {
+            av.sendBitmapToCanvas();
         }
 
         return super.onOptionsItemSelected(item);
