@@ -129,7 +129,9 @@ public class MainActivity extends AppCompatActivity {
                         av.newCanvas();
                     } else if (currentItem.equals(getString(R.string.save))) {
                         av.setDrawingCacheEnabled(true);
-                        String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(), av.getDrawingCache(), UUID.randomUUID().toString()+".png", "Custom Drawing");
+                        String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(),
+                                av.getDrawingCache(), UUID.randomUUID().toString()+getString(R.string.png),
+                                getString(R.string.custom_drawing));
                         av.destroyDrawingCache();
                     } else if (currentItem.equals(getString(R.string.undo))) {
                         av.sendBitmapToCanvas();
