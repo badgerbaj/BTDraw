@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -183,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     // Prevent the Navigation Drawer from sliding out while drawing
     public static void setDrawerLeftEdgeSize(Activity activity, DrawerLayout drawerLayout) {
         if (activity == null || drawerLayout == null)
@@ -291,4 +294,5 @@ public class MainActivity extends AppCompatActivity {
 
         return Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString()));
     }
+
 }
