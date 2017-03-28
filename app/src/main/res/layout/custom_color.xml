@@ -7,131 +7,155 @@
     android:weightSum="1"
     >
 
-    <TextView
-        android:text="@string/color"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/color_textView" />
-
-    <LinearLayout
-        android:orientation="horizontal"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:text="Red: "
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/color_textView"
-            android:layout_alignParentStart="true"
-            android:id="@+id/red_textView" />
+            android:layout_height="match_parent" >
 
-        <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:id="@+id/color_textView"
+                android:textSize="24sp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/color_textView"
-            android:layout_alignRight="@+id/red_textView"
-            android:id="@+id/red_textView_value"
-            android:text="0"
-            android:layout_alignStart="@+id/blue_textView_value"
-            android:layout_weight="1" />
+            android:layout_height="match_parent" >
 
-    </LinearLayout>
+            <TextView
+                android:text="Red: "
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/color_textView"
+                android:layout_alignParentStart="true"
+                android:id="@+id/red_textView" />
 
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/red_textView"
-        android:layout_alignParentStart="true"
-        android:id="@+id/red_seekBar"
-        android:layout_weight="1" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/color_textView"
+                android:layout_alignRight="@+id/red_textView"
+                android:id="@+id/red_textView_value"
+                android:text="0"
+                android:layout_alignStart="@+id/blue_textView_value"
+                android:layout_weight="1" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        </TableRow>
 
-        <TextView
-            android:text="Green: "
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/red_seekBar"
-            android:layout_alignParentStart="true"
-            android:id="@+id/green_textView"
-            android:layout_weight="1" />
+            android:layout_height="match_parent" >
 
-        <TextView
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/red_textView"
+                android:layout_alignParentStart="true"
+                android:id="@+id/red_seekBar"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/red_seekBar"
-            android:layout_alignRight="@+id/green_textView"
-            android:id="@+id/green_textView_value"
-            android:text="0"
-            android:layout_toEndOf="@+id/button"
-            android:layout_weight="1" />
+            android:layout_height="match_parent" >
 
-    </LinearLayout>
+            <TextView
+                android:text="Green: "
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/red_seekBar"
+                android:layout_alignParentStart="true"
+                android:id="@+id/green_textView" />
 
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/green_textView"
-        android:layout_alignParentStart="true"
-        android:id="@+id/green_seekBar"
-        android:layout_weight="1" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/red_seekBar"
+                android:layout_alignRight="@+id/green_textView"
+                android:id="@+id/green_textView_value"
+                android:text="0"
+                android:layout_toEndOf="@+id/button" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        </TableRow>
 
-        <TextView
-            android:text="Blue: "
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/green_seekBar"
-            android:id="@+id/blue_textView"
-            android:layout_weight="1" />
+            android:layout_height="match_parent" >
 
-        <TextView
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/green_textView"
+                android:layout_alignParentStart="true"
+                android:id="@+id/green_seekBar"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/green_seekBar"
-            android:layout_alignRight="@+id/blue_textView"
-            android:id="@+id/blue_textView_value"
-            android:text="0"
-            android:layout_toEndOf="@+id/red_textView"
-            android:layout_weight="1" />
+            android:layout_height="match_parent" >
 
-    </LinearLayout>
+            <TextView
+                android:text="Blue: "
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/green_seekBar"
+                android:id="@+id/blue_textView" />
 
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/blue_textView"
-        android:id="@+id/blue_seekBar" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/green_seekBar"
+                android:layout_alignRight="@+id/blue_textView"
+                android:id="@+id/blue_textView_value"
+                android:text="0"
+                android:layout_toEndOf="@+id/red_textView" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        </TableRow>
 
-        <Button
-            android:text="OK"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ok_button"
-            android:layout_weight="0.5" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-        <Button
-            android:text="CANCEL"
-            android:layout_height="wrap_content"
-            android:id="@+id/cancel_button"
-            android:layout_weight="0.5"
-            android:layout_width="wrap_content" />
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/blue_textView"
+                android:id="@+id/blue_seekBar"
+                android:layout_weight="1" />
 
-    </LinearLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:text="OK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ok_button"
+                android:layout_weight="0.5" />
+
+            <Button
+                android:text="CANCEL"
+                android:layout_height="wrap_content"
+                android:id="@+id/cancel_button"
+                android:layout_weight="0.5"
+                android:layout_width="wrap_content" />
+
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>
