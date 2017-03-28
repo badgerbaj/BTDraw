@@ -2,6 +2,7 @@ package com.jordanbray.btdraw;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,6 +19,11 @@ import android.view.View;
 import android.widget.Toast;
 import java.util.LinkedList;
 import java.util.Queue;
+
+import static com.jordanbray.btdraw.R.id.bottom;
+import static com.jordanbray.btdraw.R.id.left;
+import static com.jordanbray.btdraw.R.id.right;
+import static com.jordanbray.btdraw.R.id.top;
 
 public class ArtistView extends View {
     private int mode = 0;
@@ -76,7 +83,13 @@ public class ArtistView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         canvasBitmap = Bitmap.createBitmap(w,h, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(canvasBitmap);
-        canvas.drawColor(canvasColor);
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.btdraw_intro);
+        //Canvas logoCanvas = new Canvas(bitmap);
+
+        canvas.drawBitmap(bitmap.copy(Bitmap.Config.ARGB_8888, true), getMatrix(), canvasPaint);
+
+        //canvas.drawColor(canvasColor);
     }
 
     @Override
