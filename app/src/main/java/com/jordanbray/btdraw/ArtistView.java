@@ -371,5 +371,6 @@ public class ArtistView extends View {
     }
     public void sendBitmapToCanvas () {
         canvas.drawBitmap(currentCanvas, getMatrix(), canvasPaint);
+        path.reset();
     }
 }
