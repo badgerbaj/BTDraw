@@ -364,12 +364,15 @@ public class ArtistView extends View {
 
     // Helper to get state before change
     public void saveToBitmap() {
+        if(isDrawingCacheEnabled()) {
+            destroyDrawingCache();
+        }
         setDrawingCacheEnabled(true);
         currentCanvas = getDrawingCache();
     }
     // Called by Undo
     public void sendBitmapToCanvas () {
-        if(isDrawingCacheEnabled()) {
+        if(isDrawingCacheEnabled() && !currentCanvas.isRecycled()) {
             canvas.drawBitmap(currentCanvas, getMatrix(), canvasPaint);
             path.reset();
             destroyDrawingCache();
