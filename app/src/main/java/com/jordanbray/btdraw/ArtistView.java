@@ -100,6 +100,7 @@ public class ArtistView extends View {
         float x = event.getX();
         float y = event.getY();
 
+        // action when the screen is pressed depending on drawing mode
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             switch (mode) {
                 case 0:
@@ -124,7 +125,9 @@ public class ArtistView extends View {
                     break;
             }
 
-        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+        }
+        // action when the user moves across screen depending on drawing mode
+        else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             switch (mode) {
                 case 0:
                     path.lineTo(x, y);
@@ -142,7 +145,9 @@ public class ArtistView extends View {
                     break;
             }
 
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+        }
+        // action when the removes touch from screen depending on drawing mode
+        else if (event.getAction() == MotionEvent.ACTION_UP) {
             switch (mode) {
                 case 0:
                     canvas.drawPath(path, paint);
@@ -196,6 +201,7 @@ public class ArtistView extends View {
         return true;
     }
 
+    // sets drawing mode and stroke/fill
     public void setMode (int i) {
         mode = i;
         switch (i) {
@@ -228,6 +234,7 @@ public class ArtistView extends View {
         }
     }
 
+    // creates parameters and starts paint bucket if not already running
     public void startPaint (PaintParams pp) {
         if (ut != null && ut.getStatus() == AsyncTask.Status.FINISHED){
             ut = null;
@@ -240,12 +247,15 @@ public class ArtistView extends View {
             Log.i("Paint", "Bucket is already running");
         }
     }
+
+    // sets paint color
     public void setPaintColor (int i) {
         invalidate();
         paintColor = i;
         paint.setColor(paintColor);
     }
 
+    // gets color touched on the screen and sets as paint color
     public void ColorPicker (float x, float y) {
         invalidate();
         int pixel = canvasBitmap.getPixel(Math.round(x), Math.round(y));
@@ -256,6 +266,7 @@ public class ArtistView extends View {
         setPaintColor(paintColor);
     }
 
+    // parameters for paint bucket class to be sent to AsyncTask
     private static class PaintParams {
         Point point;
         int basecolor;
@@ -270,6 +281,7 @@ public class ArtistView extends View {
         }
     }
 
+    // runs paint bucket in background
     class UpdateTask extends AsyncTask<PaintParams, Void, Boolean> {
         @Override
         protected Boolean doInBackground(PaintParams... ps) {
@@ -310,11 +322,13 @@ public class ArtistView extends View {
     }
 
 
+    // clears canvas for new drawing
     public void newCanvas () {
         canvas.drawColor(Color.WHITE);
         invalidate();
     }
 
+    // sets brush size
     public void setBrushSize (int i) {
         invalidate();
         if (i == 1) {
@@ -328,6 +342,7 @@ public class ArtistView extends View {
         }
     }
 
+    // sets erase
     public void Erase () {
         invalidate();
         paintColor = canvasColor;
