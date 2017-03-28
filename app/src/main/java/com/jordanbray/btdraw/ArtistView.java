@@ -362,15 +362,17 @@ public class ArtistView extends View {
         paint.setColor(paintColor);
     }
 
+    // Helper to get state before change
     public void saveToBitmap() {
         setDrawingCacheEnabled(true);
-
         currentCanvas = getDrawingCache();
-
-        //destroyDrawingCache();
     }
+    // Called by Undo
     public void sendBitmapToCanvas () {
-        canvas.drawBitmap(currentCanvas, getMatrix(), canvasPaint);
-        path.reset();
+        if(isDrawingCacheEnabled()) {
+            canvas.drawBitmap(currentCanvas, getMatrix(), canvasPaint);
+            path.reset();
+            destroyDrawingCache();
+        }
     }
 }
