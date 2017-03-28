@@ -8,27 +8,17 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
-
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.UUID;
-
-/**
- * Created by bjordan on 3/21/2017.
- */
 
 public class ArtistView extends View {
-
-
     private int mode = 0;
     private Path path;
     private Paint paint, canvasPaint;
@@ -36,8 +26,8 @@ public class ArtistView extends View {
     private int canvasColor = 0xFFFFFFFF;
     private Canvas canvas;
     private Bitmap canvasBitmap;
-    PointF upperleft = new PointF(0,0);
-    PointF lowerright = new PointF(0,0);
+    PointF upperLeft = new PointF(0,0);
+    PointF lowerRight = new PointF(0,0);
     UpdateTask ut;
 
     public int getPaintColor() {
@@ -51,7 +41,6 @@ public class ArtistView extends View {
     public ArtistView(Context context) {
         super(context);
         setupDrawing();
-
     }
 
     public ArtistView(Context context, AttributeSet attrs) {
@@ -85,11 +74,9 @@ public class ArtistView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-
         canvasBitmap = Bitmap.createBitmap(w,h, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(canvasBitmap);
         canvas.drawColor(canvasColor);
-
     }
 
     @Override
@@ -103,14 +90,17 @@ public class ArtistView extends View {
         // modes:
         // 0 - Brush
         // 1 - Rectangle
-        // 2 - Oval
-        // 3 - Line
-        // 4 - Color Picker
-        // 5 - Bucket Fill
+        // 2 - Rectangle Fill
+        // 3 - Oval
+        // 4 - Oval Fill
+        // 5 - Line
+        // 6 - Color Picker
+        // 7 - Bucket Fill
 
         float x = event.getX();
         float y = event.getY();
 
+        // action when the screen is pressed depending on drawing mode
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             switch (mode) {
                 case 0:
@@ -122,20 +112,22 @@ public class ArtistView extends View {
                 case 3:
                 case 4:
                 case 5:
-                    upperleft.x = x;
-                    upperleft.y = y;
-                    lowerright.x = x;
-                    lowerright.y = y;
+                    upperLeft.x = x;
+                    upperLeft.y = y;
+                    lowerRight.x = x;
+                    lowerRight.y = y;
                     break;
                 case 6:
                 case 7:
-                    upperleft.x = x;
-                    upperleft.y = y;
+                    upperLeft.x = x;
+                    upperLeft.y = y;
                 default:
                     break;
             }
 
-        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+        }
+        // action when the user moves across screen depending on drawing mode
+        else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             switch (mode) {
                 case 0:
                     path.lineTo(x, y);
@@ -146,14 +138,16 @@ public class ArtistView extends View {
                 case 3:
                 case 4:
                 case 5:
-                    lowerright.x = x;
-                    lowerright.y = y;
+                    lowerRight.x = x;
+                    lowerRight.y = y;
                     break;
                 default:
                     break;
             }
 
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+        }
+        // action when the removes touch from screen depending on drawing mode
+        else if (event.getAction() == MotionEvent.ACTION_UP) {
             switch (mode) {
                 case 0:
                     canvas.drawPath(path, paint);
@@ -161,29 +155,22 @@ public class ArtistView extends View {
                     break;
 
                 case 1:
-                    canvas.drawRect(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
-                    invalidate();
-                    break;
                 case 2:
-                    canvas.drawRect(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
+                    canvas.drawRect(upperLeft.x,  upperLeft.y, lowerRight.x, lowerRight.y, paint);
                     invalidate();
                     break;
                 case 3:
-                    RectF rec = new RectF(upperleft.x,  upperleft.y, lowerright.x, lowerright.y);
-                    canvas.drawOval(rec, paint);
-                    invalidate();
-                    break;
                 case 4:
-                    rec = new RectF(upperleft.x,  upperleft.y, lowerright.x, lowerright.y);
+                    RectF rec = new RectF(upperLeft.x,  upperLeft.y, lowerRight.x, lowerRight.y);
                     canvas.drawOval(rec, paint);
                     invalidate();
                     break;
                 case 5:
-                    canvas.drawLine(upperleft.x,  upperleft.y, lowerright.x, lowerright.y, paint);
+                    canvas.drawLine(upperLeft.x,  upperLeft.y, lowerRight.x, lowerRight.y, paint);
                     invalidate();
                     break;
                 case 6:
-                    ColorPicker(upperleft.x,  upperleft.y);
+                    ColorPicker(upperLeft.x,  upperLeft.y);
                     invalidate();
                     break;
                 case 7:
@@ -191,7 +178,7 @@ public class ArtistView extends View {
                     int red = Color.red(pixel);
                     int green = Color.green(pixel);
                     int blue = Color.blue(pixel);
-                    int basecolor = Color.argb(1023, red, green, blue);
+                    int basecolor = Color.rgb(red, green, blue);
                     int height = canvasBitmap.getHeight();
                     int width = canvasBitmap.getWidth();
                     Point pt = new Point(Math.round(x),Math.round(y));
@@ -201,8 +188,6 @@ public class ArtistView extends View {
                         Toast.makeText(getContext(), "Filling... ", Toast.LENGTH_LONG).show();
                     }
                     break;
-
-
                 default:
                     break;
              }
@@ -216,6 +201,7 @@ public class ArtistView extends View {
         return true;
     }
 
+    // sets drawing mode and stroke/fill
     public void setMode (int i) {
         mode = i;
         switch (i) {
@@ -248,7 +234,7 @@ public class ArtistView extends View {
         }
     }
 
-
+    // creates parameters and starts paint bucket if not already running
     public void startPaint (PaintParams pp) {
         if (ut != null && ut.getStatus() == AsyncTask.Status.FINISHED){
             ut = null;
@@ -261,12 +247,15 @@ public class ArtistView extends View {
             Log.i("Paint", "Bucket is already running");
         }
     }
+
+    // sets paint color
     public void setPaintColor (int i) {
         invalidate();
         paintColor = i;
         paint.setColor(paintColor);
     }
 
+    // gets color touched on the screen and sets as paint color
     public void ColorPicker (float x, float y) {
         invalidate();
         int pixel = canvasBitmap.getPixel(Math.round(x), Math.round(y));
@@ -277,6 +266,7 @@ public class ArtistView extends View {
         setPaintColor(paintColor);
     }
 
+    // parameters for paint bucket class to be sent to AsyncTask
     private static class PaintParams {
         Point point;
         int basecolor;
@@ -291,39 +281,36 @@ public class ArtistView extends View {
         }
     }
 
+    // runs paint bucket in background
     class UpdateTask extends AsyncTask<PaintParams, Void, Boolean> {
-
         @Override
         protected Boolean doInBackground(PaintParams... ps) {
                 Queue<Point> pointList = new LinkedList<Point>();
                 pointList.add(ps[0].point);
                 while (pointList.size() > 0) {
-                    Point n = pointList.poll();
-                    if (canvasBitmap.getPixel(n.x, n.y) != ps[0].basecolor)
+                    Point listPt = pointList.poll();
+                    if (canvasBitmap.getPixel(listPt.x, listPt.y) != ps[0].basecolor)
                         continue;
 
-                    Point w = n, e = new Point(n.x + 1, n.y);
+                    Point pt = listPt;
+                    Point ptAdj = new Point(listPt.x + 1, listPt.y);
 
-                    while ((w.x > 0) && (canvasBitmap.getPixel(w.x, w.y) == ps[0].basecolor)) {
-                        canvasBitmap.setPixel(w.x, w.y, paintColor);
-                        if ((w.y > 0) && (canvasBitmap.getPixel(w.x, w.y - 1) == ps[0].basecolor))
-                            pointList.add(new Point(w.x, w.y - 1));
-                        if ((w.y < ps[0].height - 1) && (canvasBitmap.getPixel(w.x, w.y + 1) == ps[0].basecolor))
-                            pointList.add(new Point(w.x, w.y + 1));
-
-                        w.x--;
+                    while ((pt.x > 0) && (canvasBitmap.getPixel(pt.x, pt.y) == ps[0].basecolor)) {
+                        canvasBitmap.setPixel(pt.x, pt.y, paintColor);
+                        if ((pt.y > 0) && (canvasBitmap.getPixel(pt.x, pt.y - 1) == ps[0].basecolor))
+                            pointList.add(new Point(pt.x, pt.y - 1));
+                        if ((pt.y < ps[0].height - 1) && (canvasBitmap.getPixel(pt.x, pt.y + 1) == ps[0].basecolor))
+                            pointList.add(new Point(pt.x, pt.y + 1));
+                        pt.x--;
                     }
-
-                    while ((e.x < ps[0].width - 1) && (canvasBitmap.getPixel(e.x, e.y) == ps[0].basecolor)) {
-                        canvasBitmap.setPixel(e.x, e.y, paintColor);
-                        if ((e.y > 0) && (canvasBitmap.getPixel(e.x, e.y - 1) == ps[0].basecolor))
-                            pointList.add(new Point(e.x, e.y - 1));
-                        if ((e.y < ps[0].height - 1) && (canvasBitmap.getPixel(e.x, e.y + 1) == ps[0].basecolor))
-                            pointList.add(new Point(e.x, e.y + 1));
-
-                        e.x++;
+                    while (( ptAdj.x < ps[0].width - 1) && (canvasBitmap.getPixel( ptAdj.x,  ptAdj.y) == ps[0].basecolor)) {
+                        canvasBitmap.setPixel( ptAdj.x,  ptAdj.y, paintColor);
+                        if (( ptAdj.y > 0) && (canvasBitmap.getPixel( ptAdj.x,  ptAdj.y - 1) == ps[0].basecolor))
+                            pointList.add(new Point( ptAdj.x,  ptAdj.y - 1));
+                        if (( ptAdj.y < ps[0].height - 1) && (canvasBitmap.getPixel( ptAdj.x,  ptAdj.y + 1) == ps[0].basecolor))
+                            pointList.add(new Point( ptAdj.x,  ptAdj.y + 1));
+                        ptAdj.x++;
                     }
-
             }
             pointList.clear();
             return true;
@@ -332,16 +319,16 @@ public class ArtistView extends View {
             invalidate();
             ut = null;
         }
-
     }
 
 
+    // clears canvas for new drawing
     public void newCanvas () {
         canvas.drawColor(Color.WHITE);
         invalidate();
     }
 
-
+    // sets brush size
     public void setBrushSize (int i) {
         invalidate();
         if (i == 1) {
@@ -355,15 +342,10 @@ public class ArtistView extends View {
         }
     }
 
+    // sets erase
     public void Erase () {
         invalidate();
         paintColor = canvasColor;
         paint.setColor(paintColor);
     }
-
-
-
-
-
-
 }
