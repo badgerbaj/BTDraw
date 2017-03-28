@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -190,14 +192,13 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        /*
+
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        //if (id == R.id.action_settings) {
             // Not implemented
-            return true;
-        } else if (id == R.id.action_load) {
-            // Not implemented
-        } else */ if (id == R.id.action_save) {
+            //return true;
+          if (id == R.id.action_load) {
+        } else  if (id == R.id.action_save) {
             AlertDialog.Builder saveConfirm = new AlertDialog.Builder(this);
             saveConfirm.setTitle("Save Image");
             saveConfirm.setMessage("Save Drawing to Device Gallery?");
@@ -205,6 +206,7 @@ public class MainActivity extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int i) {
                     av.setDrawingCacheEnabled(true);
                     String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(), av.getDrawingCache(), UUID.randomUUID().toString()+".png", "Custom Drawing");
+                    Log.i ("Save path: ", MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
                     av.destroyDrawingCache();
                 }
             });
@@ -354,4 +356,5 @@ public class MainActivity extends AppCompatActivity
 
         return Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString()));
     }
+
 }
