@@ -3,6 +3,7 @@ package com.jordanbray.btdraw;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -196,11 +198,38 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.action_load) {
             // Not implemented
         } else */ if (id == R.id.action_save) {
-            av.setDrawingCacheEnabled(true);
-            String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(), av.getDrawingCache(), UUID.randomUUID().toString()+".png", "Custom Drawing");
-            av.destroyDrawingCache();
+            AlertDialog.Builder saveConfirm = new AlertDialog.Builder(this);
+            saveConfirm.setTitle("Save Image");
+            saveConfirm.setMessage("Save Drawing to Device Gallery?");
+            saveConfirm.setPositiveButton("Save", new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int i) {
+                    av.setDrawingCacheEnabled(true);
+                    String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(), av.getDrawingCache(), UUID.randomUUID().toString()+".png", "Custom Drawing");
+                    av.destroyDrawingCache();
+                }
+            });
+            saveConfirm.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int i){
+                    dialog.cancel();
+                }
+            });
+            saveConfirm.show();
+
          } else if (id == R.id.action_start_new) {
-            av.newCanvas();
+            AlertDialog.Builder newConfirm = new AlertDialog.Builder(this);
+            newConfirm.setTitle("Create New Drawing");
+            newConfirm.setMessage("Creating a new drawing will clear all current work. Continue? ");
+            newConfirm.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int i) {
+                    av.newCanvas();
+                }
+            });
+            newConfirm.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int i){
+                    dialog.cancel();
+                }
+            });
+            newConfirm.show();
         } else if (id == R.id.action_undo) {
             av.sendBitmapToCanvas();
         }

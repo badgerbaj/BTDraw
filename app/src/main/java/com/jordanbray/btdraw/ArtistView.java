@@ -217,6 +217,7 @@ public class ArtistView extends View {
     // sets drawing mode and stroke/fill
     public void setMode (int i) {
         mode = i;
+        paint.setColor(paintColor);
         switch (i) {
             case 0:
                 paint.setStyle(Paint.Style.STROKE);
@@ -358,8 +359,7 @@ public class ArtistView extends View {
     // sets erase
     public void Erase () {
         invalidate();
-        paintColor = canvasColor;
-        paint.setColor(paintColor);
+        paint.setColor(canvasColor);
     }
 
     public void saveToBitmap() {
