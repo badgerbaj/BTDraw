@@ -9,7 +9,7 @@
     -->
     <header value="@string/options" image="@drawable/ic_options" action="0">
         <item value="@string/start_new" image="@drawable/ic_start_new" action="0"/>
-        <item value="@string/load" image="@drawable/ic_start_new" action="1" />
+        <item value="@string/load" image="@drawable/ic_load" action="1" />
         <item value="@string/save" image="@drawable/ic_save" action="2"/>
         <item value="@string/undo" image="@drawable/ic_undo" action="3"/>
     </header>
