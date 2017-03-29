@@ -222,13 +222,13 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 // Set Selected item to header icon
                 if(!listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.options))) {
                     listDataHeader.get(groupPosition).setIconImg(listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconImg());
-                    // Collapse heading
-                    parent.collapseGroup(groupPosition);
                 }
                 
                 // Refresh the display
                 int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
                 parent.setItemChecked(index, true);
+                // Collapse heading
+                parent.collapseGroup(groupPosition);
 
                 // Determine the heading of the selected item, tell ArtistView what to do next
                 if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.options))) {
