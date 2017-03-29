@@ -1,9 +1,11 @@
 package com.jordanbray.btdraw;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
 import android.content.DialogInterface;
@@ -13,8 +15,12 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.SyncStateContract;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
     private DialogMode currentMode;
 
     private final int MODE_COLOR_PICKER = 6;
+    private final int WRITE_EXTERNAL_STORAGE = 5150;
     private DialogInterface dialog;
 
     @Override
@@ -151,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                         currentMode = DialogMode.NEW;
                         createAndShowDialog(R.string.confirm_new);
                     } else if (currentItem.equals(getString(R.string.save))) {
-                        saveImage();
                         currentMode = DialogMode.SAVE;
                         createAndShowDialog(R.string.confirm_save);
 
@@ -227,10 +233,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                     switch(currentMode) {
                         case SAVE:
                             Toast.makeText(this, "Saving... ", Toast.LENGTH_SHORT).show();
-                            av.setDrawingCacheEnabled(true);
-                            String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(), av.getDrawingCache(), UUID.randomUUID().toString()+".png", "Custom Drawing");
-                            //Log.i ("Save path: ", MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
-                            av.destroyDrawingCache();
+                            checkPermission();
                             break;
                         case NEW:
                             av.newCanvas();
@@ -360,8 +363,15 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
     }
 
     public void saveImage () {
-        av.saveToBitmap();
+        //av.saveToBitmap();
         try {
+            av.setDrawingCacheEnabled(true);
+            String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(),
+                    av.getDrawingCache(), UUID.randomUUID().toString()+getString(R.string.png),
+                    getString(R.string.custom_drawing));
+            //Log.i ("Save path: ", MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
+            av.destroyDrawingCache();
+            /*
             String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "//BTDraw//";
             File fpath = new File(path);
             if (!fpath.isDirectory()) {
@@ -371,10 +381,37 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
             f.createNewFile();
             FileOutputStream out = new FileOutputStream(f);
             av.getDrawingCache().compress(Bitmap.CompressFormat.PNG, 90, out);
+            */
         } catch (Exception e) {
 
         }
-        av.destroyDrawingCache();
+        //av.destroyDrawingCache();
+    }
+
+    private void checkPermission(){
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE);
+        } else {
+            saveImage();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+
+            case WRITE_EXTERNAL_STORAGE:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    saveImage();
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
 }
