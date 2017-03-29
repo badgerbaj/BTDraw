@@ -380,4 +380,9 @@ public class ArtistView extends View {
             }
         }
     }
+
+    public void loadBitmapToCanvas (Bitmap b) {
+        canvas.drawBitmap(b,0,0,null);
+        invalidate();
+    }
 }

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 
 import android.content.DialogInterface;
 
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,15 +34,18 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -151,9 +156,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                         currentMode = DialogMode.NEW;
                         createAndShowDialog(R.string.confirm_new);
                     } else if (currentItem.equals(getString(R.string.save))) {
-                        saveImage();
-                        currentMode = DialogMode.SAVE;
-                        createAndShowDialog(R.string.confirm_save);
+                        saveFileDialog();
 
                     } else if (currentItem.equals(getString(R.string.undo))) {
                         av.sendBitmapToCanvas();
@@ -173,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.color))) {
 
                     if (currentItem.equals(getString(R.string.color_custom))) {
-                        int testing = showDialog();
+                        int testing = customColorDialog();
                     }
                     else av.setPaintColor((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
 
@@ -227,10 +230,6 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                     switch(currentMode) {
                         case SAVE:
                             Toast.makeText(this, "Saving... ", Toast.LENGTH_SHORT).show();
-                            av.setDrawingCacheEnabled(true);
-                            String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(), av.getDrawingCache(), UUID.randomUUID().toString()+".png", "Custom Drawing");
-                            //Log.i ("Save path: ", MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
-                            av.destroyDrawingCache();
                             break;
                         case NEW:
                             av.newCanvas();
@@ -281,8 +280,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         }
     }
 
-    public int showDialog() {
-
+    public int customColorDialog() {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.custom_color);
         dialog.setTitle("SELECT CUSTOM COLOR");
@@ -359,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         return Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString()));
     }
 
-    public void saveImage () {
+    public void saveImage (String file_name) {
         av.saveToBitmap();
         try {
             String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "//BTDraw//";
@@ -367,14 +365,87 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
             if (!fpath.isDirectory()) {
                 fpath.mkdir();
             }
-            File f = new File(path, "myImage.png");
-            f.createNewFile();
+            File f = new File(path, file_name + ".png");
             FileOutputStream out = new FileOutputStream(f);
             av.getDrawingCache().compress(Bitmap.CompressFormat.PNG, 90, out);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         av.destroyDrawingCache();
     }
+
+    public void loadImage (String file_name) {
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "//BTDraw//" + file_name;
+        File fpath = new File(path);
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        try {
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(fpath), null, options);
+            av.loadBitmapToCanvas(b);
+    }
+    catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    }
+
+    public String[] loadFiles () {
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "//BTDraw//";
+        File fpath = new File(path);
+        String[] files = fpath.list() ;
+        return files;
+    }
+
+   public void loadFilesDialog () {
+       final String files[] = loadFiles();
+       AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+       builder.setTitle("Select File to Load").setItems(files, new DialogInterface.OnClickListener() {
+           @Override
+           public void onClick(DialogInterface dialogInterface, int i) {
+                loadImage(files[i]);
+       }
+       }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+           @Override
+           public void onClick(DialogInterface dialogInterface, int i) {
+
+           }
+       });
+       builder.create().show();
+   }
+
+   public void saveFileDialog () {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText input = new EditText(this);
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+               LinearLayout.LayoutParams.MATCH_PARENT,
+               LinearLayout.LayoutParams.MATCH_PARENT
+       );
+       input.setLayoutParams(lp);
+       builder.setView(input);
+       builder.setTitle("Save File");
+
+        builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
+             @Override
+             public void onClick(DialogInterface dialogInterface, int i) {
+                    saveImage(input.getText().toString());
+             }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.create().show();
+    }
+
+
+
+
+
+
 
 }
