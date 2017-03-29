@@ -1,9 +1,11 @@
 package com.jordanbray.btdraw;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
 import android.content.DialogInterface;
@@ -14,11 +16,16 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.SyncStateContract;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,8 +58,88 @@ import java.util.List;
 import java.util.UUID;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
-import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
+
+/*
+*   ------------------------------------- Additional Features --------------------------------------
+*
+*   Navigation Menu
+*       Description: A custom ExpandableListView that is populated from xml\menu_items.xml
+*       Classes: ExpandableListAdapter, ExpandedMenuModel, MenuModel, InvokeXML
+*       XML: activity_main, xml\menuitems, list_menu, listheader
+*       Methods: prepareListData, onChildClickListener, onBackPressed, setDrawerLeftEdgeSize
+*       Variables: drawer, toggle, mMenuAdapter, expandableList, listDataHeader, listDataChild, navMenu
+*
+*       .Options
+*           New
+*               Description: Generates a blank canvas to be drawn on. A verification dialog prevents
+*                   accidental selection.
+*               Classes: ArtistView
+*               Methods: createAndShowDialog, av.newCanvas
+*               Variables: av, currentMode
+*           Save
+*               Description: Saves the current drawing to the phone's gallery A verification dialog prevents
+*                   accidental selection.
+*               Methods: createAndShowDialog, checkPermission, saveImage
+*               Variables: av, currentMode, WRITE_EXTERNAL_STORAGE
+*           Load
+*               Description: Loads selected image
+*               Classes:
+*               Methods:
+*               Variables:
+*           Undo
+*               Description: Restores the canvas to the state prior to the last onTouchEvent.MotionEvent.ACTION_DOWN.
+*               Classes: ArtistView
+*               Methods: av.sendBitmapToCanvas, saveToBitmap
+*               Variables: av, currentCanvas
+*
+*       .Tools
+*           Paint Bucket
+*               Description: Fills a continuous colored area with the selected color.
+*               Classes: ArtistView
+*               Methods: av.setMode
+*               Variables: av
+*           Erase
+*               Description: Restores the selected area to the original canvas color.  Tool is based on
+*                   Object Size.
+*               Classes: ArtistView
+*               Methods: av.Erase, av.setMode
+*               Variables:
+*           Color Picker
+*               Description: Allows the user to select a color displayed on screen.  The selected tool icon
+*                   will update to reflect this.
+*               Classes: ArtistView
+*               Methods: av.setMode
+*               Variables: av
+*           Rectangle Fill
+*               Description: The user can create a rectangle of variable size that will automatically fill
+*                   the space within.
+*               Classes: ArtistView
+*               Methods: av.setMode
+*               Variables: av
+*           Oval
+*               Description: The user can create an oval of variable size that is just an outline.  Object
+*                   Size governs the thickness of its borders.
+*               Classes: ArtistView
+*               Methods: av.setMode
+*               Variables: av
+*           Oval Fill
+*               Description: The user can create an oval of variable size that will automatically fill
+*                   the space within.
+*               Classes: ArtistView
+*               Methods: av.setMode
+*               Variables: av
+*
+*       .Color
+*           Custom
+*               Description: Brings up a dialog with 3 RGB sliders, which allows the user to choose
+*                   a custom color to draw with.  Compatible with all tools including color picker.
+*               Classes: ArtistView
+*               XML: custom_color
+*               Methods: setPaintColor, showDialog
+*               Variables: av, MODE_COLOR_PICKER
+*   ------------------------------------------------------------------------------------------------
+ */
 
 public class MainActivity extends AppCompatActivity implements AlertDialog.OnClickListener {
 
@@ -72,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
     private DialogMode currentMode;
 
     private final int MODE_COLOR_PICKER = 6;
-    private DialogInterface dialog;
+    private final int WRITE_EXTERNAL_STORAGE = 5150;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +224,6 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 // Get the name of the current item
                 String currentItem = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconName();
 
-
                 // Set Selected item to header icon
                 if(!listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.options))) {
                     listDataHeader.get(groupPosition).setIconImg(listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconImg());
@@ -157,7 +243,8 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                         createAndShowDialog(R.string.confirm_new);
                     } else if (currentItem.equals(getString(R.string.save))) {
                         saveFileDialog();
-
+                        currentMode = DialogMode.SAVE;
+                        createAndShowDialog(R.string.confirm_save);
                     } else if (currentItem.equals(getString(R.string.undo))) {
                         av.sendBitmapToCanvas();
                     }
@@ -219,17 +306,17 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 // int which = -2
                 dialog.dismiss();
                 break;
-            case BUTTON_NEUTRAL:
-                // int which = -3
-                dialog.dismiss();
-                break;
             case BUTTON_POSITIVE:
                 // int which = -1
                 // Take action
                 try {
                     switch(currentMode) {
                         case SAVE:
+
                             Toast.makeText(this, "Saving... ", Toast.LENGTH_SHORT).show();
+
+                            checkPermission();
+
                             break;
                         case NEW:
                             av.newCanvas();
@@ -244,11 +331,10 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
     }
 
     void createAndShowDialog(int message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
         builder.setTitle(R.string.title);
         builder.setMessage(message);
         builder.setPositiveButton(android.R.string.yes, this);
-        builder.setNeutralButton(android.R.string.cancel, this);
         builder.setNegativeButton(android.R.string.no, this);
         builder.create().show();
     }
@@ -357,9 +443,21 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         return Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString()));
     }
 
+
     public void saveImage (String file_name) {
         av.saveToBitmap();
+
+    public void saveImage () {
+        //av.saveToBitmap();
+
         try {
+            av.setDrawingCacheEnabled(true);
+            String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(),
+                    av.getDrawingCache(), UUID.randomUUID().toString()+getString(R.string.png),
+                    getString(R.string.custom_drawing));
+            //Log.i ("Save path: ", MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
+            av.destroyDrawingCache();
+            /*
             String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "//BTDraw//";
             File fpath = new File(path);
             if (!fpath.isDirectory()) {
@@ -368,10 +466,22 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
             File f = new File(path, file_name + ".png");
             FileOutputStream out = new FileOutputStream(f);
             av.getDrawingCache().compress(Bitmap.CompressFormat.PNG, 90, out);
+            */
         } catch (Exception e) {
             e.printStackTrace();
         }
-        av.destroyDrawingCache();
+        //av.destroyDrawingCache();
+    }
+
+    private void checkPermission(){
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE);
+        } else {
+            saveImage();
+        }
     }
 
     public void loadImage (String file_name) {
@@ -447,5 +557,21 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
 
 
 
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+
+            case WRITE_EXTERNAL_STORAGE:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    saveImage();
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
 
 }
