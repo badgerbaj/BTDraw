@@ -57,6 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import static android.R.attr.onClick;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 
@@ -154,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
 
     private enum DialogMode {
         SAVE,
+        LOAD,
         NEW
     }
     private DialogMode currentMode;
@@ -240,11 +242,14 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
 
                     if (currentItem.equals(getString(R.string.start_new))) {
                         currentMode = DialogMode.NEW;
-                        createAndShowDialog(R.string.confirm_new);
+                        createAndShowDialog(R.string.confirm_new, currentMode);
                     } else if (currentItem.equals(getString(R.string.save))) {
-                        saveFileDialog();
+                        //saveFileDialog();
                         currentMode = DialogMode.SAVE;
-                        createAndShowDialog(R.string.confirm_save);
+                        createAndShowDialog(R.string.confirm_save, currentMode);
+                    } else if (currentItem.equals(getString(R.string.load))) {
+                        currentMode = DialogMode.LOAD;
+                        createAndShowDialog(R.string.confirm_load, currentMode);
                     } else if (currentItem.equals(getString(R.string.undo))) {
                         av.sendBitmapToCanvas();
                     }
@@ -318,6 +323,9 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                             checkPermission();
 
                             break;
+                        case LOAD:
+                            //loadImage(files[i]);
+                            break;
                         case NEW:
                             av.newCanvas();
                             break;
@@ -330,12 +338,31 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         }
     }
 
-    void createAndShowDialog(int message) {
+    void createAndShowDialog(int message, DialogMode mode) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
         builder.setTitle(R.string.title);
         builder.setMessage(message);
-        builder.setPositiveButton(android.R.string.yes, this);
-        builder.setNegativeButton(android.R.string.no, this);
+
+        if(mode == DialogMode.LOAD) {
+            final String files[] = loadFiles();
+
+            builder.setItems(files, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    loadImage(files[i]);
+                }
+            }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+
+        } else {
+            builder.setPositiveButton(android.R.string.yes, this);
+            builder.setNegativeButton(android.R.string.no, this);
+        }
+
         builder.create().show();
     }
 
@@ -443,30 +470,27 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         return Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString()));
     }
 
-
-    public void saveImage (String file_name) {
-        av.saveToBitmap();
-
-    public void saveImage () {
-        //av.saveToBitmap();
+    public void saveImage () { // String file_name) {
 
         try {
+            /*
             av.setDrawingCacheEnabled(true);
             String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(),
                     av.getDrawingCache(), UUID.randomUUID().toString()+getString(R.string.png),
                     getString(R.string.custom_drawing));
             //Log.i ("Save path: ", MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
             av.destroyDrawingCache();
-            /*
+            */
+            av.saveToBitmap();
             String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "//BTDraw//";
             File fpath = new File(path);
             if (!fpath.isDirectory()) {
                 fpath.mkdir();
             }
-            File f = new File(path, file_name + ".png");
+            File f = new File(path, "Testing.png"); //file_name + ".png");
             FileOutputStream out = new FileOutputStream(f);
             av.getDrawingCache().compress(Bitmap.CompressFormat.PNG, 90, out);
-            */
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -501,30 +525,13 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
     }
 
     public String[] loadFiles () {
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "//BTDraw//";
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/BTDraw/";
         File fpath = new File(path);
         String[] files = fpath.list() ;
         return files;
     }
 
-   public void loadFilesDialog () {
-       final String files[] = loadFiles();
-       AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-       builder.setTitle("Select File to Load").setItems(files, new DialogInterface.OnClickListener() {
-           @Override
-           public void onClick(DialogInterface dialogInterface, int i) {
-                loadImage(files[i]);
-       }
-       }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-           @Override
-           public void onClick(DialogInterface dialogInterface, int i) {
-
-           }
-       });
-       builder.create().show();
-   }
-
+   /*
    public void saveFileDialog () {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText input = new EditText(this);
@@ -551,13 +558,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         });
         builder.create().show();
     }
-
-
-
-
-
-
-
+    */
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
