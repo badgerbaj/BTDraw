@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Determine the heading of the selected item, tell ArtistView what to do next
                 if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.options))) {
+
                     if (currentItem.equals(getString(R.string.start_new))) {
                         av.newCanvas();
                     } else if (currentItem.equals(getString(R.string.save))) {
@@ -138,21 +139,25 @@ public class MainActivity extends AppCompatActivity {
                     } else if (currentItem.equals(getString(R.string.undo))) {
                         av.sendBitmapToCanvas();
                     }
+
                     drawer.closeDrawer(GravityCompat.START);
+
                 } else if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.tools))) {
+
                     if (currentItem.equals(getString(R.string.erase))) {
                         av.setMode(0);
                         av.Erase();
                     } else av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
+
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.object_size))) {
                     av.setBrushSize((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.color))) {
-                    if (currentItem.equals(getString(R.string.color_custom))) {
-                        //drawer.closeDrawer(GravityCompat.START);
-                        int testing = showDialog();
 
+                    if (currentItem.equals(getString(R.string.color_custom))) {
+                        int testing = showDialog();
                     }
                     else av.setPaintColor((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
+
                 }
 
                 return false;
@@ -247,7 +252,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         red.setMax(255);
         green.setMax(255);
         blue.setMax(255);
@@ -288,10 +292,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         dialog.show();
-
         return Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString()));
     }
 
