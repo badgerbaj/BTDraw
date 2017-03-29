@@ -24,6 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -51,6 +52,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import static android.app.AlertDialog.THEME_DEVICE_DEFAULT_DARK;
+import static android.app.AlertDialog.THEME_HOLO_DARK;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
@@ -74,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
 
     private final int MODE_COLOR_PICKER = 6;
     private final int WRITE_EXTERNAL_STORAGE = 5150;
-    private DialogInterface dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,17 +141,16 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 // Get the name of the current item
                 String currentItem = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconName();
 
-
                 // Set Selected item to header icon
                 if(!listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.options))) {
                     listDataHeader.get(groupPosition).setIconImg(listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getIconImg());
+                    // Collapse heading
+                    parent.collapseGroup(groupPosition);
                 }
                 
                 // Refresh the display
                 int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
                 parent.setItemChecked(index, true);
-                // Collapse heading
-                parent.collapseGroup(groupPosition);
 
                 // Determine the heading of the selected item, tell ArtistView what to do next
                 if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.options))) {
@@ -160,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                     } else if (currentItem.equals(getString(R.string.save))) {
                         currentMode = DialogMode.SAVE;
                         createAndShowDialog(R.string.confirm_save);
-
                     } else if (currentItem.equals(getString(R.string.undo))) {
                         av.sendBitmapToCanvas();
                     }
@@ -222,17 +222,12 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 // int which = -2
                 dialog.dismiss();
                 break;
-            case BUTTON_NEUTRAL:
-                // int which = -3
-                dialog.dismiss();
-                break;
             case BUTTON_POSITIVE:
                 // int which = -1
                 // Take action
                 try {
                     switch(currentMode) {
                         case SAVE:
-                            Toast.makeText(this, "Saving... ", Toast.LENGTH_SHORT).show();
                             checkPermission();
                             break;
                         case NEW:
@@ -248,11 +243,10 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
     }
 
     void createAndShowDialog(int message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
         builder.setTitle(R.string.title);
         builder.setMessage(message);
         builder.setPositiveButton(android.R.string.yes, this);
-        builder.setNeutralButton(android.R.string.cancel, this);
         builder.setNegativeButton(android.R.string.no, this);
         builder.create().show();
     }
