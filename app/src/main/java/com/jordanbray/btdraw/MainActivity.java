@@ -52,11 +52,89 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import static android.app.AlertDialog.THEME_DEVICE_DEFAULT_DARK;
-import static android.app.AlertDialog.THEME_HOLO_DARK;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
-import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
+
+/*
+*   ------------------------------------- Additional Features --------------------------------------
+*
+*   Navigation Menu
+*       Description: A custom ExpandableListView that is populated from xml\menu_items.xml
+*       Classes: ExpandableListAdapter, ExpandedMenuModel, MenuModel, InvokeXML
+*       XML: activity_main, xml\menuitems, list_menu, listheader
+*       Methods: prepareListData, onChildClickListener, onBackPressed, setDrawerLeftEdgeSize
+*       Variables: drawer, toggle, mMenuAdapter, expandableList, listDataHeader, listDataChild, navMenu
+*
+*       .Options
+*           New
+*               Description: Generates a blank canvas to be drawn on. A verification dialog prevents
+*                   accidental selection.
+*               Classes: ArtistView
+*               Methods: createAndShowDialog, av.newCanvas
+*               Variables: av, currentMode
+*           Save
+*               Description: Saves the current drawing to the phone's gallery A verification dialog prevents
+*                   accidental selection.
+*               Methods: createAndShowDialog, checkPermission, saveImage
+*               Variables: av, currentMode, WRITE_EXTERNAL_STORAGE
+*           Load
+*               Description: Loads selected image
+*               Classes:
+*               Methods:
+*               Variables:
+*           Undo
+*               Description: Restores the canvas to the state prior to the last onTouchEvent.MotionEvent.ACTION_DOWN.
+*               Classes: ArtistView
+*               Methods: av.sendBitmapToCanvas, saveToBitmap
+*               Variables: av, currentCanvas
+*
+*       .Tools
+*           Paint Bucket
+*               Description: Fills a continuous colored area with the selected color.
+*               Classes: ArtistView
+*               Methods: av.setMode
+*               Variables: av
+*           Erase
+*               Description: Restores the selected area to the original canvas color.  Tool is based on
+*                   Object Size.
+*               Classes: ArtistView
+*               Methods: av.Erase, av.setMode
+*               Variables:
+*           Color Picker
+*               Description: Allows the user to select a color displayed on screen.  The selected tool icon
+*                   will update to reflect this.
+*               Classes: ArtistView
+*               Methods: av.setMode
+*               Variables: av
+*           Rectangle Fill
+*               Description: The user can create a rectangle of variable size that will automatically fill
+*                   the space within.
+*               Classes: ArtistView
+*               Methods: av.setMode
+*               Variables: av
+*           Oval
+*               Description: The user can create an oval of variable size that is just an outline.  Object
+*                   Size governs the thickness of its borders.
+*               Classes: ArtistView
+*               Methods: av.setMode
+*               Variables: av
+*           Oval Fill
+*               Description: The user can create an oval of variable size that will automatically fill
+*                   the space within.
+*               Classes: ArtistView
+*               Methods: av.setMode
+*               Variables: av
+*
+*       .Color
+*           Custom
+*               Description: Brings up a dialog with 3 RGB sliders, which allows the user to choose
+*                   a custom color to draw with.  Compatible with all tools including color picker.
+*               Classes: ArtistView
+*               XML: custom_color
+*               Methods: setPaintColor, showDialog
+*               Variables: av, MODE_COLOR_PICKER
+*   ------------------------------------------------------------------------------------------------
+ */
 
 public class MainActivity extends AppCompatActivity implements AlertDialog.OnClickListener {
 
@@ -407,5 +485,4 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 break;
         }
     }
-
 }
