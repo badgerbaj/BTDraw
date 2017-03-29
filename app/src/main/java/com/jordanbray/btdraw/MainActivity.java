@@ -153,6 +153,8 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
     private HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> listDataChild;
     private MenuModel navMenu;
 
+    EditText input;
+
     private enum DialogMode {
         SAVE,
         LOAD,
@@ -317,14 +319,10 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 try {
                     switch(currentMode) {
                         case SAVE:
-
-                            Toast.makeText(this, "Saving... ", Toast.LENGTH_SHORT).show();
-
                             checkPermission();
-
                             break;
                         case LOAD:
-                            //loadImage(files[i]);
+                            // Overridden
                             break;
                         case NEW:
                             av.newCanvas();
@@ -340,13 +338,11 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
 
     void createAndShowDialog(int message, DialogMode mode) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
-        builder.setTitle(R.string.title);
-        builder.setMessage(message);
 
         if(mode == DialogMode.LOAD) {
             final String files[] = loadFiles();
 
-            builder.setItems(files, new DialogInterface.OnClickListener() {
+            builder.setTitle(message).setItems(files, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     loadImage(files[i]);
@@ -354,11 +350,23 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
             }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-
                 }
             });
-
         } else {
+            if (mode == DialogMode.SAVE) {
+                input = new EditText(this);
+
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                );
+                input.setId(R.id.edit_text_save);
+                input.setLayoutParams(lp);
+                builder.setView(input);
+            }
+
+            builder.setTitle(R.string.title);
+            builder.setMessage(message);
             builder.setPositiveButton(android.R.string.yes, this);
             builder.setNegativeButton(android.R.string.no, this);
         }
@@ -470,31 +478,23 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         return Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString()));
     }
 
-    public void saveImage () { // String file_name) {
+    public void saveImage (String file_name) {
 
         try {
-            /*
-            av.setDrawingCacheEnabled(true);
-            String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(),
-                    av.getDrawingCache(), UUID.randomUUID().toString()+getString(R.string.png),
-                    getString(R.string.custom_drawing));
-            //Log.i ("Save path: ", MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
-            av.destroyDrawingCache();
-            */
+
             av.saveToBitmap();
             String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "//BTDraw//";
             File fpath = new File(path);
             if (!fpath.isDirectory()) {
                 fpath.mkdir();
             }
-            File f = new File(path, "Testing.png"); //file_name + ".png");
+            File f = new File(path, file_name + ".png");
             FileOutputStream out = new FileOutputStream(f);
             av.getDrawingCache().compress(Bitmap.CompressFormat.PNG, 90, out);
-
+            av.destroyDrawingCache();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //av.destroyDrawingCache();
     }
 
     private void checkPermission(){
@@ -504,7 +504,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
             ActivityCompat.requestPermissions(
                     this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE);
         } else {
-            saveImage();
+            saveImage(input.getText().toString());
         }
     }
 
@@ -531,42 +531,13 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         return files;
     }
 
-   /*
-   public void saveFileDialog () {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final EditText input = new EditText(this);
-
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-               LinearLayout.LayoutParams.MATCH_PARENT,
-               LinearLayout.LayoutParams.MATCH_PARENT
-       );
-       input.setLayoutParams(lp);
-       builder.setView(input);
-       builder.setTitle("Save File");
-
-        builder.setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
-             @Override
-             public void onClick(DialogInterface dialogInterface, int i) {
-                    saveImage(input.getText().toString());
-             }
-        });
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        builder.create().show();
-    }
-    */
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
 
             case WRITE_EXTERNAL_STORAGE:
                 if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    saveImage();
+                    saveImage(input.getText().toString());
                 }
                 break;
 
