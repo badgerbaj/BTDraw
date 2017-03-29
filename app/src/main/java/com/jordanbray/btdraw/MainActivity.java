@@ -3,6 +3,7 @@ package com.jordanbray.btdraw;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -131,11 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     if (currentItem.equals(getString(R.string.start_new))) {
                         av.newCanvas();
                     } else if (currentItem.equals(getString(R.string.save))) {
-                        av.setDrawingCacheEnabled(true);
-                        String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(),
-                                av.getDrawingCache(), UUID.randomUUID().toString()+getString(R.string.png),
-                                getString(R.string.custom_drawing));
-                        av.destroyDrawingCache();
+                        saveImage();
                     } else if (currentItem.equals(getString(R.string.undo))) {
                         av.sendBitmapToCanvas();
                     }
@@ -294,6 +292,24 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.show();
         return Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString()));
+    }
+
+    public void saveImage () {
+        av.saveToBitmap();
+        try {
+            String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "//BTDraw//";
+            File fpath = new File(path);
+            if (!fpath.isDirectory()) {
+                fpath.mkdir();
+            }
+            File f = new File(path, "myImage.png");
+            f.createNewFile();
+            FileOutputStream out = new FileOutputStream(f);
+            av.getDrawingCache().compress(Bitmap.CompressFormat.PNG, 90, out);
+        } catch (Exception e) {
+
+        }
+        av.destroyDrawingCache();
     }
 
 }
