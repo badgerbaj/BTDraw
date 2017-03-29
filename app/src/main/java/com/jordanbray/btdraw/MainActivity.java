@@ -3,6 +3,7 @@ package com.jordanbray.btdraw;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -24,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -37,7 +40,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_NEUTRAL;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
+
+public class MainActivity extends AppCompatActivity implements AlertDialog.OnClickListener {
 
     final Context context = this;
     private ArtistView av;
@@ -48,7 +55,14 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> listDataChild;
     private MenuModel navMenu;
 
+    private enum DialogMode {
+        SAVE,
+        NEW
+    }
+    private DialogMode currentMode;
+
     private final int MODE_COLOR_PICKER = 6;
+    private DialogInterface dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,13 +143,11 @@ public class MainActivity extends AppCompatActivity {
                 if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.options))) {
 
                     if (currentItem.equals(getString(R.string.start_new))) {
-                        av.newCanvas();
+                        currentMode = DialogMode.NEW;
+                        createAndShowDialog(R.string.confirm_new);
                     } else if (currentItem.equals(getString(R.string.save))) {
-                        av.setDrawingCacheEnabled(true);
-                        String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(),
-                                av.getDrawingCache(), UUID.randomUUID().toString()+getString(R.string.png),
-                                getString(R.string.custom_drawing));
-                        av.destroyDrawingCache();
+                        currentMode = DialogMode.SAVE;
+                        createAndShowDialog(R.string.confirm_save);
                     } else if (currentItem.equals(getString(R.string.undo))) {
                         av.sendBitmapToCanvas();
                     }
@@ -190,6 +202,50 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        switch (which) {
+            case BUTTON_NEGATIVE:
+                // int which = -2
+                dialog.dismiss();
+                break;
+            case BUTTON_NEUTRAL:
+                // int which = -3
+                dialog.dismiss();
+                break;
+            case BUTTON_POSITIVE:
+                // int which = -1
+                // Take action
+                try {
+                    switch(currentMode) {
+                        case SAVE:
+                            Toast.makeText(this, "Saving... ", Toast.LENGTH_SHORT).show();
+                            av.setDrawingCacheEnabled(true);
+                            String imageSave = MediaStore.Images.Media.insertImage(getContentResolver(), av.getDrawingCache(), UUID.randomUUID().toString()+".png", "Custom Drawing");
+                            //Log.i ("Save path: ", MediaStore.Images.Media.INTERNAL_CONTENT_URI.toString());
+                            av.destroyDrawingCache();
+                            break;
+                        case NEW:
+                            av.newCanvas();
+                            break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                dialog.dismiss();
+                break;
+        }
+    }
+
+    void createAndShowDialog(int message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.title);
+        builder.setMessage(message);
+        builder.setPositiveButton(android.R.string.yes, this);
+        builder.setNeutralButton(android.R.string.cancel, this);
+        builder.setNegativeButton(android.R.string.no, this);
+        builder.create().show();
+    }
 
     // Prevent the Navigation Drawer from sliding out while drawing
     public static void setDrawerLeftEdgeSize(Activity activity, DrawerLayout drawerLayout) {

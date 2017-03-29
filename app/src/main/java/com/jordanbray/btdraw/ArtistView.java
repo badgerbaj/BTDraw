@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -24,6 +25,7 @@ import static com.jordanbray.btdraw.R.id.bottom;
 import static com.jordanbray.btdraw.R.id.left;
 import static com.jordanbray.btdraw.R.id.right;
 import static com.jordanbray.btdraw.R.id.top;
+import static com.jordanbray.btdraw.R.string.rectangle;
 
 public class ArtistView extends View {
     private int mode = 0;
@@ -86,8 +88,6 @@ public class ArtistView extends View {
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.btdraw_intro);
         canvas.drawBitmap(bitmap.copy(Bitmap.Config.ARGB_8888, true), getMatrix(), canvasPaint);
-
-        //canvas.drawColor(canvasColor);
     }
 
     @Override

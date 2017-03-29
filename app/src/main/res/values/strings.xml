@@ -49,6 +49,9 @@
         <string name="color_black">Black</string>
         <string name="color_custom">Custom</string>
 
+    <string name="confirm_save">Save Drawing to Device Gallery?</string>
+    <string name="confirm_new">Creating a new drawing will clear all current work. Continue?</string>
+
     <string name="png">.png</string>
     <string name="custom_drawing">Custom Drawing</string>
     <string name="title">BT Draw</string>
