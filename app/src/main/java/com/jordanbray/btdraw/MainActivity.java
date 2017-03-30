@@ -4,40 +4,25 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-
 import android.content.DialogInterface;
-
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ViewDragHelper;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.ThemedSpinnerAdapter;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -45,19 +30,12 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
-
-import static android.R.attr.onClick;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 
@@ -79,14 +57,13 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
 *               Methods: createAndShowDialog, av.newCanvas
 *               Variables: av, currentMode
 *           Save
-*               Description: Saves the current drawing to the phone's gallery A verification dialog prevents
+*               Description: Saves the current drawing to the specified file name
 *                   accidental selection.
 *               Methods: createAndShowDialog, checkPermission, saveImage
-*               Variables: av, currentMode, WRITE_EXTERNAL_STORAGE
+*               Variables: av, currentMode, WRITE_EXTERNAL_STORAGE, input
 *           Load
 *               Description: Loads selected image
-*               Classes:
-*               Methods:
+*               Methods: createAndShowDialog, loadFiles, loadImage
 *               Variables:
 *           Undo
 *               Description: Restores the canvas to the state prior to the last onTouchEvent.MotionEvent.ACTION_DOWN.
@@ -137,7 +114,7 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
 *                   a custom color to draw with.  Compatible with all tools including color picker.
 *               Classes: ArtistView
 *               XML: custom_color
-*               Methods: setPaintColor, showDialog
+*               Methods: setPaintColor, showDialog, customColorDialog
 *               Variables: av, MODE_COLOR_PICKER
 *   ------------------------------------------------------------------------------------------------
  */
@@ -152,9 +129,9 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
     private List<ExpandedMenuModel> listDataHeader;
     private HashMap<ExpandedMenuModel, List<ExpandedMenuModel>> listDataChild;
     private MenuModel navMenu;
+    private EditText input;
 
-    EditText input;
-
+    // Menu selection tracking
     private enum DialogMode {
         SAVE,
         LOAD,
@@ -168,36 +145,61 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         av = (ArtistView)findViewById(R.id.drawing);
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerStateChanged(int newState) {
+
                 boolean found = false;
                 ExpandedMenuModel custom = new ExpandedMenuModel();
+
                 if (newState == DrawerLayout.STATE_SETTLING) {
+
+                    // Check if Color Picker is selected
                     if(av.getMode() == MODE_COLOR_PICKER) {
+
+                        // Iterate through headers
                         for (ExpandedMenuModel p : listDataHeader) {
+
+                            // Check if the Color heading is selected
                             if (p.getIconName().equals(getString(R.string.color))) {
+
+                                // Iterate through children
                                 for (ExpandedMenuModel m : listDataChild.get(p)) {
+
+                                    // Check if the the Custom Color child is selected
                                     if(m.getIconName().equals(getString(R.string.color_custom)))
                                         custom = m;
+
+                                    // Check if the selected paint color matches this color child
                                     if( (int) m.getAvAction() == av.getPaintColor() ) {
+
+                                        // Set the Color header's icon to the selected color
                                         p.setIconImg(m.getIconImg());
+
+                                        // Updated the view
                                         invalidateOptionsMenu();
                                         mMenuAdapter.notifyDataSetInvalidated();
+
+                                        // Flag the color as found
                                         found = true;
+
                                         break;
                                     }
                                 }
                                 if(!found) {
+
+                                    // No standard color match found, set the custom color icon
                                     p.setIconImg(custom.getIconImg());
+
+                                    // Update the view
                                     invalidateOptionsMenu();
                                     mMenuAdapter.notifyDataSetInvalidated();
                                 }
@@ -208,19 +210,24 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 }
             }
         };
+
         drawer.setDrawerListener(toggle);
         setDrawerLeftEdgeSize(this, drawer);
         toggle.syncState();
 
+        // Apply custom navigation object
         expandableList = (ExpandableListView) findViewById(R.id.navigationmenu);
 
-
+        // Read menu data from xml
         prepareListData();
+
+        // Set menu items to the adapter
         mMenuAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild, expandableList);
 
-        // setting list adapter
+        // Set list adapter
         expandableList.setAdapter(mMenuAdapter);
 
+        // Handle when a menu item is selected
         expandableList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View view, int groupPosition, int childPosition, long id) {
@@ -236,28 +243,37 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 // Refresh the display
                 int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(groupPosition, childPosition));
                 parent.setItemChecked(index, true);
+
                 // Collapse heading
                 parent.collapseGroup(groupPosition);
 
                 // Determine the heading of the selected item, tell ArtistView what to do next
                 if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.options))) {
 
+                    // New
                     if (currentItem.equals(getString(R.string.start_new))) {
                         currentMode = DialogMode.NEW;
                         createAndShowDialog(R.string.confirm_new, currentMode);
-                    } else if (currentItem.equals(getString(R.string.save))) {
-                        //saveFileDialog();
+                    }
+                    // Save
+                    else if (currentItem.equals(getString(R.string.save))) {
                         currentMode = DialogMode.SAVE;
                         createAndShowDialog(R.string.confirm_save, currentMode);
-                    } else if (currentItem.equals(getString(R.string.load))) {
+                    }
+                    // Load
+                    else if (currentItem.equals(getString(R.string.load))) {
                         currentMode = DialogMode.LOAD;
                         createAndShowDialog(R.string.confirm_load, currentMode);
-                    } else if (currentItem.equals(getString(R.string.undo))) {
+                    }
+                    // Undo
+                    else if (currentItem.equals(getString(R.string.undo))) {
                         av.sendBitmapToCanvas();
                     }
 
+                    // Always close the navigation menu on Options header selection
                     drawer.closeDrawer(GravityCompat.START);
 
+                // Tools
                 } else if(listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.tools))) {
 
                     if (currentItem.equals(getString(R.string.erase))) {
@@ -265,8 +281,12 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                         av.Erase();
                     } else av.setMode((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
 
+                // Object Size
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.object_size))) {
+
                     av.setBrushSize((int) listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getAvAction());
+
+                // Color
                 } else if (listDataHeader.get(groupPosition).getIconName().equals(getString(R.string.color))) {
 
                     if (currentItem.equals(getString(R.string.color_custom))) {
@@ -279,33 +299,16 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 return false;
             }
         });
-        expandableList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View view, int groupPosition, long id) {
-
-                return false;
-            }
-        });
     }
 
+    // Build the entries in the drawer menu
     private void prepareListData() {
-        // Build the entries in the drawer menu
         navMenu = InvokeXML.readMenuItemsXML(getApplicationContext());
         listDataHeader = navMenu.getListDataHeader();
         listDataChild = navMenu.getListDataChild();
     }
 
-    @Override
-    public void onBackPressed() {
-        // If the drawer is open on back pressed, close it
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
+    // Main alert dialog onClick
     @Override
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
@@ -336,9 +339,38 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         }
     }
 
+    // Ask user for permission to save write to external disk
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+
+            case WRITE_EXTERNAL_STORAGE:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    saveImage(input.getText().toString());
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    // If the drawer is open on back pressed, close it
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    // Build Alert Dialog for Options menu
     void createAndShowDialog(int message, DialogMode mode) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
 
+        // Build Load
         if(mode == DialogMode.LOAD) {
             final String files[] = loadFiles();
 
@@ -352,7 +384,9 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
                 public void onClick(DialogInterface dialogInterface, int i) {
                 }
             });
+        // Build the Rest
         } else {
+            // Save Uses an Edit Text
             if (mode == DialogMode.SAVE) {
                 input = new EditText(this);
 
@@ -374,33 +408,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         builder.create().show();
     }
 
-    // Prevent the Navigation Drawer from sliding out while drawing
-    public static void setDrawerLeftEdgeSize(Activity activity, DrawerLayout drawerLayout) {
-        if (activity == null || drawerLayout == null)
-            return;
-
-        try {
-            // find ViewDragHelper and set it accessible
-            Field leftDraggerField = drawerLayout.getClass().getDeclaredField("mLeftDragger");
-            leftDraggerField.setAccessible(true);
-            ViewDragHelper leftDragger = (ViewDragHelper) leftDraggerField.get(drawerLayout);
-            // find edgesize and set is accessible
-            Field edgeSizeField = leftDragger.getClass().getDeclaredField("mEdgeSize");
-            edgeSizeField.setAccessible(true);
-            int edgeSize = edgeSizeField.getInt(leftDragger);
-            // set new edgesize
-            Point displaySize = new Point();
-            activity.getWindowManager().getDefaultDisplay().getSize(displaySize);
-            edgeSizeField.setInt(leftDragger, 0); //Math.max(edgeSize, (int) (displaySize.x * displayWidthPercentage)));
-        } catch (NoSuchFieldException e) {
-            // ignore
-        } catch (IllegalArgumentException e) {
-            // ignore
-        } catch (IllegalAccessException e) {
-            // ignore
-        }
-    }
-
+    // Build Custom Color Picker
     public int customColorDialog() {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.custom_color);
@@ -478,17 +486,46 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         return Color.rgb(Integer.parseInt(redtvValue.getText().toString()), Integer.parseInt(greentvValue.getText().toString()) , Integer.parseInt(bluetvValue.getText().toString()));
     }
 
+    // Prevent the Navigation Drawer from Sliding Out While Drawing
+    public static void setDrawerLeftEdgeSize(Activity activity, DrawerLayout drawerLayout) {
+        if (activity == null || drawerLayout == null)
+            return;
+
+        try {
+            // find ViewDragHelper and set it accessible
+            Field leftDraggerField = drawerLayout.getClass().getDeclaredField("mLeftDragger");
+            leftDraggerField.setAccessible(true);
+            ViewDragHelper leftDragger = (ViewDragHelper) leftDraggerField.get(drawerLayout);
+            // find edgesize and set is accessible
+            Field edgeSizeField = leftDragger.getClass().getDeclaredField("mEdgeSize");
+            edgeSizeField.setAccessible(true);
+            int edgeSize = edgeSizeField.getInt(leftDragger);
+            // set new edgesize
+            Point displaySize = new Point();
+            activity.getWindowManager().getDefaultDisplay().getSize(displaySize);
+            edgeSizeField.setInt(leftDragger, 0); //Math.max(edgeSize, (int) (displaySize.x * displayWidthPercentage)));
+        } catch (NoSuchFieldException e) {
+            // ignore
+        } catch (IllegalArgumentException e) {
+            // ignore
+        } catch (IllegalAccessException e) {
+            // ignore
+        }
+    }
+
+    // Save File
     public void saveImage (String file_name) {
 
         try {
 
             av.saveToBitmap();
-            String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "//BTDraw//";
+            String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) +
+                    "//" + getString(R.string.app_name) + "//";
             File fpath = new File(path);
             if (!fpath.isDirectory()) {
                 fpath.mkdir();
             }
-            File f = new File(path, file_name + ".png");
+            File f = new File(path, file_name + getString(R.string.png));
             FileOutputStream out = new FileOutputStream(f);
             av.getDrawingCache().compress(Bitmap.CompressFormat.PNG, 90, out);
             av.destroyDrawingCache();
@@ -497,6 +534,7 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         }
     }
 
+    // Verify if permission to save has been allowed (Needed for API 23+)
     private void checkPermission(){
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
@@ -508,8 +546,19 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
         }
     }
 
+    // Get List of Files in BTDraw directory
+    public String[] loadFiles () {
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) +
+                "/" + getString(R.string.app_name) + "/";
+        File fpath = new File(path);
+        String[] files = fpath.list() ;
+        return files;
+    }
+
+    // Load selected image
     public void loadImage (String file_name) {
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "//BTDraw//" + file_name;
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) +
+                "//" + getString(R.string.app_name) + "//" + file_name;
         File fpath = new File(path);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -523,27 +572,4 @@ public class MainActivity extends AppCompatActivity implements AlertDialog.OnCli
     }
 
     }
-
-    public String[] loadFiles () {
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/BTDraw/";
-        File fpath = new File(path);
-        String[] files = fpath.list() ;
-        return files;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-
-            case WRITE_EXTERNAL_STORAGE:
-                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    saveImage(input.getText().toString());
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-
 }

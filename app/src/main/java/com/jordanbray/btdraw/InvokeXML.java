@@ -55,7 +55,9 @@ public class InvokeXML extends  MainActivity {
         action
     }
 
+    // Read XML
     public static MenuModel readMenuItemsXML(Context ctx) {
+
         String tagName;
         int eventType;
         int headings = 0;
@@ -143,13 +145,14 @@ public class InvokeXML extends  MainActivity {
         return new MenuModel(listDataHeader, listDataChild);
     }
 
+    // Convert string data from xml to value in @string
     private static String getStringResourceByName(Context ctx, String aString, String resourceType) {
-        // Convert string data from xml to value in @string
         int resId = ctx.getResources().getIdentifier(aString, resourceType, ctx.getPackageName());
         return ctx.getString(resId);
     }
+
+    // Convert drawable name to a resourceID
     private static int getIntResourceByName(Context ctx, String aString, String resourceType) {
-        // Convert drawable name to a resourceID
         return ctx.getResources().getIdentifier(aString, resourceType, ctx.getPackageName());
     }
 }
